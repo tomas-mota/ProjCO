@@ -79,6 +79,15 @@ namespace xpl {
     void do_if_node(xpl::if_node * const node, int lvl);
     void do_if_else_node(xpl::if_else_node * const node, int lvl);
 
+  public:
+    void do_next_node(xpl::next_node * const node, int lvl);
+    void do_return_node(xpl::return_node * const node, int lvl);
+    void do_stop_node(xpl::stop_node * const node, int lvl);
+
+  public:
+    void do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl);
+    void do_sweep_node(xpl::sweep_node * const node, int lvl);
+
   };
 
 } // xpl
