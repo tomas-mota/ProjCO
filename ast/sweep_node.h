@@ -7,14 +7,15 @@
 namespace xpl {
 
   /**
-   * Class for describing if-then-else nodes.
+   * Class for describing sweep nodes.
    */
-  class if_else_node: public cdk::basic_node {
-    cdk::expression_node *_condition;
-    cdk::basic_node *_thenblock, *_elseblock;
+  class sweep_node: public cdk::basic_node {
+    bool isIncremental;
+    cdk::lvalue_node *_value;
+    cdk::expression_node *limit, *increment;
 
   public:
-    inline if_else_node(int lineno, cdk::expression_node *condition, cdk::basic_node *thenblock, cdk::basic_node *elseblock) :
+    inline sweep_node(int lineno, bool isIncremental, cdk::lvalue_node *value, cdk::expression_node *initValue, cdk::expression_node *limit, cdk::expression_node *increment) :
         cdk::basic_node(lineno), _condition(condition), _thenblock(thenblock), _elseblock(elseblock) {
     }
 
