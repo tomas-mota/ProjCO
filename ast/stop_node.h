@@ -1,4 +1,4 @@
-// $Id: program_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
+// $Id: stop_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
 #ifndef __XPL_STOPNODE_H__
 #define __XPL_STOPNODE_H__
 

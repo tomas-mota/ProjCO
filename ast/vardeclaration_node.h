@@ -1,4 +1,4 @@
-// $Id: while_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
+// $Id: vardeclaration_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
 #ifndef __CDK_VARDECLARATIONNODE_H__
 #define __CDK_VARDECLARATIONNODE_H__
 

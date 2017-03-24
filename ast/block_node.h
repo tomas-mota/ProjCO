@@ -1,4 +1,4 @@
-a// $Id: if_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
+// $Id: block_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
 #ifndef __CDK_BLOCKNODE_H__
 #define __CDK_BLOCKNODE_H__
 
@@ -7,14 +7,14 @@ a// $Id: if_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
 namespace xpl {
 
   /**
-   * Class for describing if-then nodes.
+   * Class for describing block nodes.
    */
-  class if_node: public cdk::basic_node {
+  class block_node: public cdk::basic_node {
     cdk::sequence_node *_declaration, *_instruction;
 
   public:
     inline block_node(int lineno, cdk::sequence_node *declaration, cdk::sequence_node *instruction) :
-        cdk::basic_node(lineno), _condition(condition), _block(block) {
+        cdk::basic_node(lineno), _declaration(declaration), _block(block) {
     }
 
   public:
