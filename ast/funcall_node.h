@@ -10,7 +10,7 @@ namespace xpl {
   /**
    * Class for describing function call  nodes.
    */
-  class funcall_node: public cdk::basic_node {
+  class funcall_node: public cdk::expression_node {
     cdk::identifier_node *_name;
     cdk::sequence_node *_variables;
 

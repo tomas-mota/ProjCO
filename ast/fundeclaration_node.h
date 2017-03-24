@@ -3,7 +3,6 @@
 #define __CDK_funDECLARATIONNODE_H__
 
 #include <cdk/ast/sequence_node.h>
-#include <cdk/ast/identifier_node>
 #include <cdk/basic_type.h>
 #include <block_node.h>
 
@@ -14,8 +13,8 @@ namespace xpl {
    */
   class fundeclaration_node: public cdk::basic_node {
     bool _isProcedure, _isPublic, _isUsing;
-    cdk::basic_type *_type
-    cdk::identifier_node *_name;
+    cdk::basic_type *_type;
+    String _name;
     cdk::sequence_node *_variables;
     cdk::literal_node *_literal;
     block_node *_body;
@@ -23,7 +22,7 @@ namespace xpl {
 
   public:
     inline fundeclaration_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, cdk::basic_type *type,
-                              cdk::identifier_node *name, cdk::sequence_node *variables, cdk::literal_node *literal, block_node *body) :
+                              String name, cdk::sequence_node *variables, cdk::literal_node *literal, block_node *body) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
     }
 
@@ -45,7 +44,7 @@ namespace xpl {
       return _type;
     }
 
-    inline cdk::identifier_node *name() {
+    inline String name() {
       return _name;
     }
 
