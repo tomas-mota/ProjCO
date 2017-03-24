@@ -47,7 +47,7 @@ namespace xpl {
     }
 
     inline cdk::basic_node *block() {
-      return _block
+      return _block;
     }
 
     void accept(basic_ast_visitor *sp, int level) {

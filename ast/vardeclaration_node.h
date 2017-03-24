@@ -4,22 +4,22 @@
 
 #include <cdk/ast/expression_node.h>
 #include <cdk/ast/lvalue_node.h>
-#include <cdk/ast/basic_node.h>
+#include <cdk/basic_type.h>
 
 namespace xpl {
 
   /**
-   * Class for describing while-cycle nodes.
+   * Class for describing variable declaration nodes.
    */
   class vardeclaration_node: public cdk::basic_node {
     bool _isPublic, _isUsing;
-    cdk::basic_node *_type;
+    cdk::basic_type *_type;
     cdk::lvalue_node *_name;
-    cdk::expression_node *_argument
+    cdk::expression_node *_argument;
 
 
   public:
-    inline while_node(int lineno, bool isPublic, bool isUsing, cdk::basic_node *type, cdk::lvalue_node *name, cdk::expression_node *argument) :
+    inline vardeclaration_node(int lineno, bool isPublic, bool isUsing, cdk::basic_type *type, cdk::lvalue_node *name, cdk::expression_node *argument) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
     }
 
@@ -33,7 +33,7 @@ namespace xpl {
       return _isUsing;
     }
 
-    inline cdk::basic_node *type() {
+    inline cdk::basic_type *type() {
       return _type;
     }
 
@@ -46,7 +46,7 @@ namespace xpl {
     }
 
     void accept(basic_ast_visitor *sp, int level) {
-      sp->do_while_node(this, level);
+      sp->do_vardeclaration_node(this, level);
     }
 
   };
