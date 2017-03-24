@@ -193,3 +193,18 @@ void xpl::xml_writer::do_stop_node(xpl::stop_node * const node, int lvl) {}
 void xpl::xml_writer::do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl) {}
 
 void xpl::xml_writer::do_sweep_node(xpl::sweep_node * const node, int lvl) {}
+
+void xpl::xml_writer::do_address_node(xpl::address_node * const node, int lvl) {}
+
+//---------------------------------------------------------------------------
+
+void xpl::xml_writer::do_block_node(xpl::block_node * const node, int lvl) {}
+
+void xpl::xml_writer::do_funcall_node(xpl::funcall_node * const node, int lvl) {}
+
+void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const node, int lvl) {}
+//---------------------------------------------------------------------------
+
+void xpl::xml_writer::do_indexation_node(xpl::indexation_node * const node, int lvl) {}
+
+void xpl::xml_writer::do_memallocation_node(xpl::memallocation_node * const node, int lvl) {}

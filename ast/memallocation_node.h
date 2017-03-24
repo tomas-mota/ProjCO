@@ -1,8 +1,9 @@
-// $Id: if_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
+// $Id: memallocation_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
 #ifndef __CDK_MEMALOCATIONNODE_H__
 #define __CDK_MEMALOCATIONNODE_H__
 
 #include <cdk/ast/integer_node.h>
+#include <cdk/ast/expression_node.h>
 #include <cdk/basic_type.h>
 
 namespace xpl {
@@ -10,7 +11,7 @@ namespace xpl {
   /**
    * Class for describing memory allocation nodes.
    */
-  class indexation_node: public cdk::lvalue_node {
+  class indexation_node: public cdk::expression_node {
     cdk::basic_type *_type;
     String _nome;
     cdk::integer_node *_size;

@@ -3,7 +3,7 @@
 #define __CDK_FUNCALLNODE_H__
 
 #include <cdk/ast/sequence_node.h>
-#include <cdk/ast/identifier_node>
+#include <cdk/ast/identifier_node.h>
 
 namespace xpl {
 

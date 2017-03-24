@@ -4,7 +4,7 @@
 
 #include <cdk/ast/sequence_node.h>
 #include <cdk/basic_type.h>
-#include <block_node.h>
+#include <ast/block_node.h>
 
 namespace xpl {
 
