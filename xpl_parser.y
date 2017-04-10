@@ -51,8 +51,8 @@ list : stmt	     { $$ = new cdk::sequence_node(LINE, $1); }
 	   ;
 
 stmt : expr ';'                         { $$ = new xpl::evaluation_node(LINE, $1); }
- 	   | tPRINT expr ';'                  { $$ = new xpl::print_node(LINE, $2); }
-     | tREAD lval ';'                   { $$ = new xpl::read_node(LINE, $2); }
+ 	   | tPRINT expr ';'                  { $$ = new xpl::print_node(LINE, $2, $2); }
+     | tREAD lval ';'                   { $$ = new xpl::read_node(LINE); }
      | tWHILE '(' expr ')' stmt         { $$ = new xpl::while_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt %prec tIFX { $$ = new xpl::if_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt tELSE stmt { $$ = new xpl::if_else_node(LINE, $3, $5, $7); }

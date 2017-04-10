@@ -3,6 +3,7 @@
 #define __CDK_IFELSENODE_H__
 
 #include <cdk/ast/expression_node.h>
+#include <cdk/ast/basic_node.h>
 
 namespace xpl {
 

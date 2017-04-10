@@ -3,6 +3,7 @@
 #define __CDK_BLOCKNODE_H__
 
 #include <cdk/ast/sequence_node.h>
+#include <cdk/ast/basic_node.h>
 
 namespace xpl {
 
@@ -14,7 +15,7 @@ namespace xpl {
 
   public:
     inline block_node(int lineno, cdk::sequence_node *declaration, cdk::sequence_node *instruction) :
-        cdk::basic_node(lineno), _declaration(declaration), _block(block) {
+        cdk::basic_node(lineno), _declaration(declaration), _instruction(instruction) {
     }
 
   public:

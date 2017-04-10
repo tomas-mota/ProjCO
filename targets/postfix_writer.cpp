@@ -183,31 +183,11 @@ void xpl::postfix_writer::do_evaluation_node(xpl::evaluation_node * const node, 
   }
 }
 
-void xpl::postfix_writer::do_print_node(xpl::print_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  node->argument()->accept(this, lvl); // determine the value to print
-  if (node->argument()->type()->name() == basic_type::TYPE_INT) {
-    _pf.CALL("printi");
-    _pf.TRASH(4); // delete the printed value
-  } else if (node->argument()->type()->name() == basic_type::TYPE_STRING) {
-    _pf.CALL("prints");
-    _pf.TRASH(4); // delete the printed value's address
-  } else {
-    std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
-    exit(1);
-  }
-  _pf.CALL("println"); // print a newline
-}
+void xpl::postfix_writer::do_print_node(xpl::print_node * const node, int lvl) {}
 
 //---------------------------------------------------------------------------
 
-void xpl::postfix_writer::do_read_node(xpl::read_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  _pf.CALL("readi");
-  _pf.PUSH();
-  node->argument()->accept(this, lvl);
-  _pf.STORE();
-}
+void xpl::postfix_writer::do_read_node(xpl::read_node * const node, int lvl) {}
 
 //---------------------------------------------------------------------------
 

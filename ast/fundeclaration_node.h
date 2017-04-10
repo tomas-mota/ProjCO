@@ -3,6 +3,8 @@
 #define __CDK_funDECLARATIONNODE_H__
 
 #include <cdk/ast/sequence_node.h>
+#include <cdk/ast/expression_node.h>
+#include <cdk/ast/basic_node.h>
 #include <cdk/basic_type.h>
 #include <ast/block_node.h>
 
@@ -13,17 +15,18 @@ namespace xpl {
    */
   class fundeclaration_node: public cdk::basic_node {
     bool _isProcedure, _isPublic, _isUsing;
-    cdk::basic_type *_type;
-    String _name;
+    basic_type *_type;
+    std::string _name;
     cdk::sequence_node *_variables;
-    cdk::literal_node *_literal;
+    cdk::expression_node *_literal;
     block_node *_body;
 
 
   public:
-    inline fundeclaration_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, cdk::basic_type *type,
-                              String name, cdk::sequence_node *variables, cdk::literal_node *literal, block_node *body) :
-        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
+    inline fundeclaration_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
+                              std::string name, cdk::sequence_node *variables, cdk::expression_node *literal, block_node *body) :
+        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables),
+        _literal(literal), _body(body) {
     }
 
   public:
@@ -40,11 +43,11 @@ namespace xpl {
       return _isUsing;
     }
 
-    inline cdk::basic_type *type() {
+    inline basic_type *type() {
       return _type;
     }
 
-    inline String name() {
+    inline std::string name() {
       return _name;
     }
 
@@ -52,12 +55,12 @@ namespace xpl {
       return _variables;
     }
 
-    inline cdk::literal_node *literal() {
+    inline cdk::expression_node *literal() {
       return _literal;
     }
 
     inline block_node *body(){
-      return _body
+      return _body;
     }
 
     void accept(basic_ast_visitor *sp, int level) {

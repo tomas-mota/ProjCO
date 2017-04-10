@@ -16,7 +16,7 @@ namespace xpl {
 
   public:
     inline funcall_node(int lineno, cdk::identifier_node *name, cdk::sequence_node *variables) :
-        cdk::basic_node(lineno), _name(name), _variables(variables) {
+        cdk::expression_node(lineno), _name(name), _variables(variables) {
     }
 
   public:

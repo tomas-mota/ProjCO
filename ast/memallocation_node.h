@@ -11,23 +11,23 @@ namespace xpl {
   /**
    * Class for describing memory allocation nodes.
    */
-  class indexation_node: public cdk::expression_node {
-    cdk::basic_type *_type;
-    String _nome;
+  class memallocation_node: public cdk::expression_node {
+    basic_type *_type;
+    std::string _nome;
     cdk::integer_node *_size;
 
   public:
-    inline if_node(int lineno, cdk::basic_type *type, String nome, cdk::integer_node *size) :
-        cdk::basic_node(lineno), _type(type), _nome(nome), _size(size) {
+    inline memallocation_node(int lineno, basic_type *type, std::string nome, cdk::integer_node *size) :
+        cdk::expression_node(lineno), _type(type), _nome(nome), _size(size) {
     }
 
   public:
 
-    inline cdk::basic_type type() {
+    inline basic_type *type() {
       return _type;
     }
 
-    inline String nome()) {
+    inline std::string nome() {
       return _nome;
     }
 

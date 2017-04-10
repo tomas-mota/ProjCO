@@ -4,6 +4,7 @@
 
 #include <cdk/ast/expression_node.h>
 #include <cdk/ast/lvalue_node.h>
+#include <cdk/ast/rvalue_node.h>
 
 namespace xpl {
 
@@ -13,13 +14,13 @@ namespace xpl {
   class address_node: public cdk::rvalue_node {
 
   public:
-    inline if_node(int lineno, cdk::lvalue_node *value) :
-        cdk::basic_node(lineno), _lvalue(value) {
+    inline address_node(int lineno, cdk::lvalue_node *value) :
+        cdk::rvalue_node(lineno, value) {
     }
 
   public:
     inline cdk::lvalue_node *value() {
-      return _lvalue
+      return this->lvalue();
     }
 
     void accept(basic_ast_visitor *sp, int level) {
