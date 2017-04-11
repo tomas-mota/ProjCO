@@ -2,25 +2,18 @@
 #ifndef __CDK_ADDRESSNODE_H__
 #define __CDK_ADDRESSNODE_H__
 
-#include <cdk/ast/expression_node.h>
-#include <cdk/ast/lvalue_node.h>
-#include <cdk/ast/rvalue_node.h>
+#include <cdk/ast/unary_expression_node.h>
 
 namespace xpl {
 
   /**
    * Class for describing address nodes.
    */
-  class address_node: public cdk::rvalue_node {
+  class address_node: public cdk::unary_expression_node {
 
   public:
-    inline address_node(int lineno, cdk::lvalue_node *value) :
-        cdk::rvalue_node(lineno, value) {
-    }
-
-  public:
-    inline cdk::lvalue_node *value() {
-      return this->lvalue();
+    inline address_node(int lineno, cdk::unary_expression_node *arg) :
+        cdk::unary_expression_node(lineno, arg) {
     }
 
     void accept(basic_ast_visitor *sp, int level) {
