@@ -3,7 +3,6 @@
 #define __CDK_VARDECLARATIONNODE_H__
 
 #include <cdk/ast/expression_node.h>
-#include <cdk/ast/lvalue_node.h>
 #include <cdk/basic_type.h>
 
 namespace xpl {
@@ -14,12 +13,12 @@ namespace xpl {
   class vardeclaration_node: public cdk::basic_node {
     bool _isPublic, _isUsing;
     basic_type *_type;
-    cdk::lvalue_node *_name;
+    std::string _name;
     cdk::expression_node *_argument;
 
 
   public:
-    inline vardeclaration_node(int lineno, bool isPublic, bool isUsing, basic_type *type, cdk::lvalue_node *name, cdk::expression_node *argument) :
+    inline vardeclaration_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string name, cdk::expression_node *argument) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
     }
 
@@ -37,7 +36,7 @@ namespace xpl {
       return _type;
     }
 
-    inline cdk::lvalue_node *name() {
+    inline std::string name() {
       return _name;
     }
 

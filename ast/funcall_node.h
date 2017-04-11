@@ -3,7 +3,7 @@
 #define __CDK_FUNCALLNODE_H__
 
 #include <cdk/ast/sequence_node.h>
-#include <cdk/ast/identifier_node.h>
+#include <cdk/ast/expression_node.h>
 
 namespace xpl {
 
@@ -11,16 +11,16 @@ namespace xpl {
    * Class for describing function call  nodes.
    */
   class funcall_node: public cdk::expression_node {
-    cdk::identifier_node *_name;
+    std::string _name;
     cdk::sequence_node *_variables;
 
   public:
-    inline funcall_node(int lineno, cdk::identifier_node *name, cdk::sequence_node *variables) :
+    inline funcall_node(int lineno, std::string name, cdk::sequence_node *variables) :
         cdk::expression_node(lineno), _name(name), _variables(variables) {
     }
 
   public:
-    inline cdk::identifier_node *name() {
+    inline std::string name() {
       return _name;
     }
 
