@@ -43,7 +43,7 @@
 %}
 %%
 
-program	: tBEGIN list tEND { compiler->ast(new xpl::program_node(LINE, $2)); }
+program	: tBEGIN list tEND //-- { compiler->ast(new cdk::sequence_node(LINE)); }
 	      ;
 
 list : stmt	     { $$ = new cdk::sequence_node(LINE, $1); }
