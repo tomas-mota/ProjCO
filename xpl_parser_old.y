@@ -22,7 +22,7 @@
 
 %token <i> tINTEGER
 %token <s> tIDENTIFIER tSTRING
-%token tWHILE tIF tPRINT tREAD tBEGIN tEND tINT tREAL tMAIN tPUBLIC tUSE tNULL tNEXT tSTOP tRETURN tPROCEDURE tSWEEP tELSIF tLITSTRING tLITINT tLITREAL
+%token tWHILE tIF tPRINT tREAD tBEGIN tEND
 
 %nonassoc tIFX
 %nonassoc tELSE
@@ -51,8 +51,7 @@ list : stmt	     { $$ = new cdk::sequence_node(LINE, $1); }
 	   ;
 
 stmt : expr ';'                         { $$ = new xpl::evaluation_node(LINE, $1); }
- 	   | expr tPRINT                      { $$ = new xpl::print_node(LINE, false, $2); }
- 	   | expr tPRINT tPRINT               { $$ = new xpl::print_node(LINE, true, $2); }
+ 	   | tPRINT expr ';'                  { $$ = new xpl::print_node(LINE, $2, $2); }
      | tREAD lval ';'                   { $$ = new xpl::read_node(LINE); }
      | tWHILE '(' expr ')' stmt         { $$ = new xpl::while_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt %prec tIFX { $$ = new xpl::if_node(LINE, $3, $5); }
