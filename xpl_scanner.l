@@ -13,8 +13,9 @@
 #define yyerror LexerError
 %}
 
-WHITESPACE             [ \t\n\r]+
-HEX                    0x[A-Za-z0-9]+
+whitespace             [ \t\n\r]+
+hex                    0x[A-Za-z0-9]+
+double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 
 %x X_STRING X_LCOMMENT X_COMMENT X
 %%
@@ -27,7 +28,7 @@ HEX                    0x[A-Za-z0-9]+
 "<="                   return tLE; 
 "=="                   return tEQ; 
 "!="                   return tNE; 
-"int"                  return tINTEGER; 
+"int"                  return tINT; 
 "real"                 return tREAL; 
 "string"               return tSTRING; 
 "xpl"                  return tMAIN;
@@ -50,28 +51,24 @@ HEX                    0x[A-Za-z0-9]+
 [A-Za-z_][A-Za-z0-9_]* yylval.s = new std::string(yytext); return tIDENTIFIER;
 
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
-<X_STRING>\"|\0        yy_pop_state(); return tSTRING;
+<X_STRING>\"           yy_pop_state(); return tLITSTRING;
 <X_STRING>\\\"         *yylval.s += yytext + 1;
-<X_STRING>[\t\n\r]+   ;
+<X_STRING>[\t\n\r]+    ;
 <X_STRING>.            *yylval.s += yytext;
+
+0|[1-9][0-9]*          yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
+hex                    yylval.i = strtol(yytext, nullptr, 16); return tLITINT;
+double                 yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
 
 <X_COMMENT>"/*"        yy_push_state(X_COMMENT); 
 <X_COMMENT>"*/"        yy_pop_state();
 <X_COMMENT>.|\n        ;
 
-0|[1-9][0-9]*         yylval.i = strtol(yytext, nullptr, 10); return tINTEGER;
-HEX                    yylval.i = strtol(yytext, nullptr, 16); return tINTEGER;
-
-[0-9]*
-
 [-()<>=+*/%;{}.]       return *yytext;
 
-WHITESPACE             ; /* ignore whitespace */
+whitespace             ; /* ignore whitespace */
 
 .                      yyerror("Unknown character");
-
-
-
 
 
 
