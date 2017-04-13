@@ -3,6 +3,8 @@
 #define __CDK_ADDRESSNODE_H__
 
 #include <cdk/ast/unary_expression_node.h>
+#include <cdk/ast/lvalue_node.h>
+
 
 namespace xpl {
 
@@ -12,8 +14,8 @@ namespace xpl {
   class address_node: public cdk::unary_expression_node {
 
   public:
-    inline address_node(int lineno, cdk::unary_expression_node *arg) :
-        cdk::unary_expression_node(lineno, arg) {
+    inline address_node(int lineno, cdk::lvalue_node *value) :
+        cdk::unary_expression_node(lineno, value) {
     }
 
     void accept(basic_ast_visitor *sp, int level) {

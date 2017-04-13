@@ -45,14 +45,13 @@ double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 "if"                   return tIF; 
 "else"                 return tELSE; 
 "elsif"                return tELSIF; 
-"!"                    return tPRINT; 
-"@"                    return tREAD; 
 
 [A-Za-z_][A-Za-z0-9_]* yylval.s = new std::string(yytext); return tIDENTIFIER;
 
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
-<X_STRING>\"           yy_pop_state(); return tLITSTRING;
+<X_STRING>\"           yy_pop_state(); return tLITSTR;
 <X_STRING>\\\"         *yylval.s += yytext + 1;
+<X_STRING>\"" "\"      ;
 <X_STRING>[\t\n\r]+    ;
 <X_STRING>.            *yylval.s += yytext;
 
