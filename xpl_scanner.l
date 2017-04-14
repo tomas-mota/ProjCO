@@ -63,7 +63,7 @@ double                 yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
 <X_COMMENT>"*/"        yy_pop_state();
 <X_COMMENT>.|\n        ;
 
-[-()<>=+*/%;{}.]       return *yytext;
+[-()<>=+*/%;{}.,?@\[\]|&]     return *yytext;
 
 whitespace             ; /* ignore whitespace */
 

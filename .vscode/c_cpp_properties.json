@@ -16,7 +16,8 @@
             "includePath": [
                 "/usr/include",
                 "/usr/local/include",
-                "/home/tomas/libcdk12-201612301740"
+                "/home/tomas/libcdk12-201612301740",
+                "/home/tomas/compiladores/root/usr/include/cdk"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,

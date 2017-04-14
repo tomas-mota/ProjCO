@@ -42,11 +42,11 @@
 %left '*' '/' '%'
 %nonassoc tUNARY '?'
 
-%type <b
-%type <node> stmt program
+%type <node> stmt program ptr
 %type <sequence> list
 %type <expression> expr
 %type <lvalue> lval
+%type <i> type 
 
 %{
 //-- The rules below will be included in yyparse, the main parsing function.
@@ -68,13 +68,13 @@ stmt : expr ';'                         { $$ = new xpl::evaluation_node(LINE, $1
      | tIF '(' expr ')' stmt %prec tIFX { $$ = new xpl::if_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt tELSE stmt { $$ = new xpl::if_else_node(LINE, $3, $5, $7); }
      | '{' list '}'                     { $$ = $2; }
+     | type tIDENTIFIER '=' expr        { $$ = new xpl::vardeclaration_node(LINE, false, false, new basic_type(8, $1), $2, $4)}
      ;
 
 expr : tLITINT                 { $$ = new cdk::integer_node(LINE, $1); }
 	   | tLITSTR                 { $$ = new cdk::string_node(LINE, $1); }
      | '-' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }
-     | '+' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }    /*a resolver */
-     | '+' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }    /*a resolver */
+     | '+' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }    //a resolver
      | expr '+' expr	         { $$ = new cdk::add_node(LINE, $1, $3); }
      | expr '-' expr	         { $$ = new cdk::sub_node(LINE, $1, $3); }
      | expr '*' expr	         { $$ = new cdk::mul_node(LINE, $1, $3); }
@@ -93,22 +93,18 @@ expr : tLITINT                 { $$ = new cdk::integer_node(LINE, $1); }
      | '?' lval                { $$ = new xpl::address_node(LINE, $2); }
      | lval                    { $$ = new cdk::rvalue_node(LINE, $1); }  //FIXME
      | lval '=' expr           { $$ = new cdk::assignment_node(LINE, $1, $3); }
-     | lval '=' expr           { $$ = new cdk::assignment_node(LINE, $1, $3); }
      ;
 
 lval : tIDENTIFIER             { $$ = new cdk::identifier_node(LINE, $1); }
-     | tREAL tIDENTIFIER            
-     | tINT tIDENTIFIER            
-     | tSTRING tIDENTIFIER            
-     | ptr tIDENTIFIER            
      ;
 
-init :  
+type : tINT								{ $$ = 0; } 			
+		 | tREAL							{ $$ = 1; }					
+		 | tSTRING						{ $$ = 3; }
+		 | ptr  							{ $$ = 4; }  //tenho de adicionar nested pointer
+     ;
 
+ptr  : '[' tipo ']'
+     ;
 
-
-
-
-ptr  : '[' ptr ']'                   
-     | 
 %%
