@@ -206,3 +206,7 @@ void xpl::type_checker::do_indexation_node(xpl::indexation_node * const node, in
 void xpl::type_checker::do_memallocation_node(xpl::memallocation_node * const node, int lvl) {
 
 }
+
+void xpl::type_checker::do_fundef_node(xpl::fundef_node * const node, int lvl) {
+
+}

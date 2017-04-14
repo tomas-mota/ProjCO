@@ -190,3 +190,5 @@ void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const no
 void xpl::xml_writer::do_indexation_node(xpl::indexation_node * const node, int lvl) {}
 
 void xpl::xml_writer::do_memallocation_node(xpl::memallocation_node * const node, int lvl) {}
+
+void xpl::xml_writer::do_fundef_node(xpl::fundef_node * const node, int lvl) {}

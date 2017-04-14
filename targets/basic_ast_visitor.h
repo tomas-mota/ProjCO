@@ -130,6 +130,7 @@ public:
 public:
   virtual void do_indexation_node(xpl::indexation_node * const node, int lvl) = 0;
   virtual void do_memallocation_node(xpl::memallocation_node * const node, int lvl) = 0;
+  virtual void do_fundef_node(xpl::fundef_node * const node, int lvl) = 0;
 
 };
 

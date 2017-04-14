@@ -55,9 +55,10 @@ double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 <X_STRING>[\t\n\r]+    ;
 <X_STRING>.            *yylval.s += yytext;
 
-0|[1-9][0-9]*          yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
-hex                    yylval.i = strtol(yytext, nullptr, 16); return tLITINT;
-double                 yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
+0          yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
+[1-9][0-9]*          yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
+0x[A-Za-z0-9]+                    yylval.i = strtol(yytext, nullptr, 16); return tLITINT;
+[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?                 yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
 
 <X_COMMENT>"/*"        yy_push_state(X_COMMENT); 
 <X_COMMENT>"*/"        yy_pop_state();
@@ -65,7 +66,7 @@ double                 yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
 
 [-()<>=+*/%;{}.,?@\[\]|&]     return *yytext;
 
-whitespace             ; /* ignore whitespace */
+[ \t\n\r]+             ; /* ignore whitespace */
 
 .                      yyerror("Unknown character");
 

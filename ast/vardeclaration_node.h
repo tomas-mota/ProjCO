@@ -13,12 +13,12 @@ namespace xpl {
   class vardeclaration_node: public cdk::basic_node {
     bool _isPublic, _isUsing;
     basic_type *_type;
-    std::string _name;
+    std::string *_name;
     cdk::expression_node *_argument;
 
 
   public:
-    inline vardeclaration_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string name, cdk::expression_node *argument) :
+    inline vardeclaration_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string *name, cdk::expression_node *argument) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
     }
 
@@ -36,7 +36,7 @@ namespace xpl {
       return _type;
     }
 
-    inline std::string name() {
+    inline std::string *name() {
       return _name;
     }
 

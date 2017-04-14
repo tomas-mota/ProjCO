@@ -15,6 +15,7 @@
   int                   i;	/* integer value */
   float                 r;
   bool                  b;
+  basic_type           *t;
   std::string          *s;	/* symbol name or string literal */
   cdk::basic_node      *node;	/* node pointer */
   cdk::sequence_node   *sequence;
@@ -41,12 +42,13 @@
 %left '+' '-'
 %left '*' '/' '%'
 %nonassoc tUNARY '?'
+%nonassoc '(' ')' '[' ']'
 
-%type <node> stmt program ptr
+%type <node> stmt program var sweep
 %type <sequence> list
 %type <expression> expr
 %type <lvalue> lval
-%type <i> type 
+%type <t> type ptr
 
 %{
 //-- The rules below will be included in yyparse, the main parsing function.
@@ -68,8 +70,9 @@ stmt : expr ';'                         { $$ = new xpl::evaluation_node(LINE, $1
      | tIF '(' expr ')' stmt %prec tIFX { $$ = new xpl::if_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt tELSE stmt { $$ = new xpl::if_else_node(LINE, $3, $5, $7); }
      | '{' list '}'                     { $$ = $2; }
-     | type tIDENTIFIER '=' expr        { $$ = new xpl::vardeclaration_node(LINE, false, false, new basic_type(8, $1), $2, $4)}
+     | var                              { $$ = $1; }
      ;
+
 
 expr : tLITINT                 { $$ = new cdk::integer_node(LINE, $1); }
 	   | tLITSTR                 { $$ = new cdk::string_node(LINE, $1); }
@@ -93,18 +96,30 @@ expr : tLITINT                 { $$ = new cdk::integer_node(LINE, $1); }
      | '?' lval                { $$ = new xpl::address_node(LINE, $2); }
      | lval                    { $$ = new cdk::rvalue_node(LINE, $1); }  //FIXME
      | lval '=' expr           { $$ = new cdk::assignment_node(LINE, $1, $3); }
+     //| lval '[' expr/rval ']'  { $$ = new cdk::address_node(LINE, $1, $3); }      fix this (address node)
      ;
 
 lval : tIDENTIFIER             { $$ = new cdk::identifier_node(LINE, $1); }
      ;
 
-type : tINT								{ $$ = 0; } 			
-		 | tREAL							{ $$ = 1; }					
-		 | tSTRING						{ $$ = 3; }
-		 | ptr  							{ $$ = 4; }  //tenho de adicionar nested pointer
+type : tINT								{ $$ = new basic_type(4, basic_type::TYPE_INT); } 			
+		 | tREAL							{ $$ = new basic_type(8, basic_type::TYPE_DOUBLE); }					
+		 | tSTRING						{ $$ = new basic_type(4, basic_type::TYPE_STRING); }
+		 | ptr  							{ $$ = $1; }  //tenho de adicionar nested pointer
      ;
 
-ptr  : '[' tipo ']'
+ptr  : '[' type ']'       { $$ = new basic_type(4, basic_type::TYPE_POINTER);}
      ;
+
+var  : tPUBLIC type tIDENTIFIER '=' expr { $$ = new xpl::vardeclaration_node(LINE, true, false, $2, $3, $5);} 			
+	   | tUSE type tIDENTIFIER '=' expr    { $$ = new xpl::vardeclaration_node(LINE, false, true, $2, $3, $5);}
+	   | type tIDENTIFIER '=' expr         { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, $4);}
+	   | type tIDENTIFIER                  { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr);}
+     ; 
+
+vars : var
+     | var ',' vars
+     ;
+
 
 %%

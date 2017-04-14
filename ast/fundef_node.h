@@ -1,27 +1,32 @@
 // $Id: fundeclaration_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
-#ifndef __CDK_funDECLARATIONNODE_H__
-#define __CDK_funDECLARATIONNODE_H__
+#ifndef __CDK_FUNDEFNODE_H__
+#define __CDK_FUNDEFNODE_H__
 
 #include <cdk/ast/sequence_node.h>
+#include <cdk/ast/expression_node.h>
 #include <cdk/ast/basic_node.h>
 #include <cdk/basic_type.h>
+#include <ast/block_node.h>
 
 namespace xpl {
 
   /**
    * Class for describing function declaration nodes.
    */
-  class fundeclaration_node: public cdk::basic_node {
+  class fundef_node: public cdk::basic_node {
     bool _isProcedure, _isPublic, _isUsing;
     basic_type *_type;
     std::string _name;
     cdk::sequence_node *_variables;
+    cdk::expression_node *_literal;
+    block_node *_body;
 
 
   public:
-    inline fundeclaration_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
-                              std::string name, cdk::sequence_node *variables) :
-        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables){
+    inline fundef_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
+                              std::string name, cdk::sequence_node *variables, cdk::expression_node *literal, block_node *body) :
+        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables),
+        _literal(literal), _body(body) {
     }
 
   public:
@@ -50,8 +55,16 @@ namespace xpl {
       return _variables;
     }
 
+    inline cdk::expression_node *literal() {
+      return _literal;
+    }
+
+    inline block_node *body(){
+      return _body;
+    }
+
     void accept(basic_ast_visitor *sp, int level) {
-      sp->do_fundeclaration_node(this, level);
+      sp->do_fundef_node(this, level);
     }
 
   };
