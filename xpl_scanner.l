@@ -13,11 +13,7 @@
 #define yyerror LexerError
 %}
 
-whitespace             [ \t\n\r]+
-hex                    0x[A-Za-z0-9]+
-double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-
-%x X_STRING X_LCOMMENT X_COMMENT X
+%x X_STRING X_COMMENT X_STR_SPECIAL
 %%
 
 "//".*$                ; /* ignore comments */
@@ -53,13 +49,20 @@ double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
 <X_STRING>\"           yy_pop_state(); return tLITSTR;
 <X_STRING>\\\"         *yylval.s += yytext + 1;
-<X_STRING>[\t\n\r]+    ;
+<X_STRING>\\           {yy_push_state(X_STR_SPECIAL);}
 <X_STRING>.            *yylval.s += yytext;
 
-0          yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
-[1-9][0-9]*          yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
-0x[A-Za-z0-9]+                    yylval.i = strtol(yytext, nullptr, 16); return tLITINT;
-[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?                 yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
+<X_STR_SPECIAL>n                        {yy_pop_state(); *yylval.s += std::string(1,10); }
+<X_STR_SPECIAL>r                        {yy_pop_state(); *yylval.s += std::string(1,13); }
+<X_STR_SPECIAL>t                        {yy_pop_state(); *yylval.s += std::string(1,9); }
+<X_STR_SPECIAL>[\"\\]                   {yy_pop_state(); *yylval.s += std::string(1,(int)*yytext); }
+<X_STR_SPECIAL>[0-9a-fA-F][0-9a-fA-F]?	{yy_pop_state(); *yylval.s += std::string(1,strtol(yytext, nullptr, 16)); }
+<X_STR_SPECIAL>.|\n                     yyerror("Invalid special character");
+
+0x[A-Za-z0-9]+                         yylval.i = strtol(yytext, nullptr, 16); return tLITINT;
+[1-9][0-9]*                            yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
+0                                      yylval.i = strtol(yytext, nullptr, 10); return tLITINT;
+[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?      yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;
 
 <X_COMMENT>"/*"        yy_push_state(X_COMMENT); 
 <X_COMMENT>"*/"        yy_pop_state();

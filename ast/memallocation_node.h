@@ -12,8 +12,8 @@ namespace xpl {
   class memallocation_node: public cdk::unary_expression_node{
 
   public:
-    inline memallocation_node(int lineno, cdk::unary_expression_node *arg) :
-        cdk::unary_expression_node(lineno, arg) {
+    inline memallocation_node(int lineno, cdk::integer_node *size) :
+        cdk::unary_expression_node(lineno, size) {
     }
 
     void accept(basic_ast_visitor *sp, int level) {
