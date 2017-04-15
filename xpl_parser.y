@@ -18,6 +18,8 @@
   basic_type           *t;
   std::string          *s;	/* symbol name or string literal */
   xpl::block_node      *bl;
+  xpl::functiondeclaration_node   *fdec;
+  xpl::fundef_node     *fdef;
   cdk::basic_node      *node;	/* node pointer */
   cdk::sequence_node   *sequence;
   cdk::expression_node *expression; /* expression nodes */
@@ -47,12 +49,14 @@
 %nonassoc '(' ')' '[' ']'
 
 %type <node> program var decl inst func var iter
-%type <sequence> decls vars insts decls exprs vardecls
+%type <sequence> decls vars insts exprs vardecls fargs
 %type <expression> expr
 %type <lvalue> lval
 %type <t> type ptr
 %type <s> str
 %type <bl> block body
+%type <fdec> fundec
+%type <fdef> fundef
 
 %{
 //-- The rules below will be included in yyparse, the main parsing function.
@@ -62,42 +66,58 @@
 program	: decls //-- { compiler->ast(new cdk::sequence_node(LINE)); }
 	      ;
 
-decl : var ';'							              { $$ = $1; }
-		 | func							                  { $$ = $1; }
+decl : var ';'							               { $$ = $1; }
+		 | fundec							                 { $$ = $1; }
+		 | fundef							                 { $$ = $1; }
 		 ;
 
-var  : tPUBLIC type tIDENTIFIER '=' expr { $$ = new xpl::vardeclaration_node(LINE, true, false, $2, $3, $5); } 			
-	   | tUSE type tIDENTIFIER '=' expr    { $$ = new xpl::vardeclaration_node(LINE, false, true, $2, $3, $5); }
-	   | type tIDENTIFIER '=' expr         { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, $4); }
-	   | type tIDENTIFIER                  { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr); }
+var  : tPUBLIC type tIDENTIFIER '=' expr   { $$ = new xpl::vardeclaration_node(LINE, true, false, $2, $3, $5); } 			
+	   | tUSE type tIDENTIFIER '=' expr      { $$ = new xpl::vardeclaration_node(LINE, false, true, $2, $3, $5); }
+	   | type tIDENTIFIER '=' expr           { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, $4); }
+	   | type tIDENTIFIER                    { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr); }
      ; 
 
-func : tPROC tIDENTIFIER '(' vars ')'    { $$ = new xpl::fundeclaration_node(LINE, true, false, false, new basic_type(4, basic_type::TYPE_UNSPEC), $2, $4); }
+fundec : tPROC tIDENTIFIER '(' ')'              { $$ = new xpl::fundeclaration_node(LINE, true, false, false, new basic_type(4, basic_type::TYPE_UNSPEC), $2, nullptr); }
+       | tPUBLIC tPROC tIDENTIFIER '(' ')'      { $$ = new xpl::fundeclaration_node(LINE, true, true, false, new basic_type(4, basic_type::TYPE_UNSPEC), $3, nullptr); }
+       | tPUBLIC type tIDENTIFIER '(' fargs ')' { $$ = new xpl::fundeclaration_node(LINE, false, true, false, $2, $3, $5); }
+       | tUSE type tIDENTIFIER '(' fargs ')'    { $$ = new xpl::fundeclaration_node(LINE, false, false, true, $2, $3, $5); }
+       | type tIDENTIFIER '(' fargs ')'         { $$ = new xpl::fundeclaration_node(LINE, false, false, false, $2, $3, $5); }
+       ;
+
+fundef : tPROC tIDENTIFIER '(' ')' body                          { $$ = new xpl::fundef_node
+                                                                 (LINE, true, false, false,new basic_type(4, basic_type::TYPE_UNSPEC), $2, nullptr, nullptr, $5); }
+       | tPUBLIC tPROC tIDENTIFIER '(' ')' body                  { $$ = new xpl::fundef_node
+                                                                 (LINE, true, true, false,new basic_type(4, basic_type::TYPE_UNSPEC), $3, nullptr, nullptr, $6); }
+       | tPUBLIC type tIDENTIFIER '(' fargs ')' '=' literal body { $$ = new xpl::fundef_node(LINE, false, true, false, type, $3, $5, $8, $9); }
+       | tPUBLIC type tIDENTIFIER '(' fargs ')' body             { $$ = new xpl::fundef_node(LINE, false, true, false, type, $3, $5, nullptr, $9); }
+       | type tIDENTIFIER '(' fargs ')' '=' literal body         { $$ = new xpl::fundef_node(LINE, false, false, false, type, $2, $4, $7, $98; }
+       | type tIDENTIFIER '(' fargs ')' '=' body                 { $$ = new xpl::fundef_node(LINE, false, false, false, type, $2, $4, nullptr, $98; }
+       ; 
+
+
+type : tINT			                           { $$ = new basic_type(4, basic_type::TYPE_INT); } 			
+		 | tREAL		                           { $$ = new basic_type(8, basic_type::TYPE_DOUBLE); }					
+		 | tSTRING			                       { $$ = new basic_type(4, basic_type::TYPE_STRING); }
+		 | '[' type ']'                        { $$ = new basic_type(4, basic_type::TYPE_POINTER);}
      ;
 
-type : tINT								     { $$ = new basic_type(4, basic_type::TYPE_INT); } 			
-		 | tREAL							     { $$ = new basic_type(8, basic_type::TYPE_DOUBLE); }					
-		 | tSTRING				         { $$ = new basic_type(4, basic_type::TYPE_STRING); }
-		 | ptr  					  	     { $$ = $1; }
+body : block                               { $$ = $1; } //alterar para cenas especiais de blocos de funcoes
      ;
 
-body : block                   { $$ = $1; }
-     ;
+block : '{' vardecls insts '}'             { $$ = new xpl::block_node(LINE, $2, $3); }
+      | '{' vardecls '}'                   { $$ = new xpl::block_node(LINE, $2, nullptr); }
+      | '{' insts '}'                      { $$ = new xpl::block_node(LINE, nullptr, $3); }
+      | '{' '}'                            { $$ = new xpl::block_node(LINE, nullptr, nullptr); }
 
-block : '{' vardecls insts '}'    { $$ = new xpl::block_node(LINE, $2, $3); }
-      | '{' vardecls '}'    { $$ = new xpl::block_node(LINE, $2, nullptr); }
-      | '{' insts '}'    { $$ = new xpl::block_node(LINE, nullptr, $3); }
-      | '{' '}'    { $$ = new xpl::block_node(LINE, nullptr, nullptr); }
-
-inst : expr ';'                         { $$ = new xpl::evaluation_node(LINE, $1); }
- 	   | expr tPRINT                      { $$ = new xpl::print_node(LINE, false, $1); }
- 	   | expr tPRINTLN                    { $$ = new xpl::print_node(LINE, true, $1); }
-     | tNEXT                            { $$ = new xpl::next_node(LINE); } 
-     | tSTOP                            { $$ = new xpl::stop_node(LINE); } 
-     | tRETURN                          { $$ = new xpl::return_node(LINE); } 
-     //| cond                             { $$ = $1; }
-     //| iter                             { $$ = $1; }
-     | block                            { $$ = $1; }
+inst : expr ';'                            { $$ = new xpl::evaluation_node(LINE, $1); }
+ 	   | expr tPRINT                         { $$ = new xpl::print_node(LINE, false, $1); }
+ 	   | expr tPRINTLN                       { $$ = new xpl::print_node(LINE, true, $1); }
+     | tNEXT                               { $$ = new xpl::next_node(LINE); } 
+     | tSTOP                               { $$ = new xpl::stop_node(LINE); } 
+     | tRETURN                             { $$ = new xpl::return_node(LINE); } 
+     //| cond                              { $$ = $1; }
+     //| iter                              { $$ = $1; }
+     | block                               { $$ = $1; }
      ;
 
 iter : tWHILE '(' expr ')' inst                             { $$ = new xpl::while_node(LINE, $3, $5); }
@@ -119,9 +139,8 @@ elsifs : elsif	                            { $$ = new cdk::sequence_node(LINE, $
 elsif  : tELSIF '(' expr ')' inst           { $$ =  }
 */
 
-expr : tLITINT                    { $$ = new cdk::integer_node(LINE, $1); }
-	   | str                        { $$ = new cdk::string_node(LINE, $1); }
-     | tLITREAL                   { $$ = new cdk::double_node(LINE, $1); }
+
+expr : lit                        { $$ = $1 }
      | tIDENTIFIER '(' exprs ')'  { $$ = new xpl::funcall_node(LINE, $1, $3); }
      | '-' expr %prec tUNARY      { $$ = new cdk::neg_node(LINE, $2); }
      | expr '+' expr	            { $$ = new cdk::add_node(LINE, $1, $3); }
@@ -144,8 +163,14 @@ expr : tLITINT                    { $$ = new cdk::integer_node(LINE, $1); }
      | lval                       { $$ = new cdk::rvalue_node(LINE, $1); }  //FIXME
      | lval '=' expr              { $$ = new cdk::assignment_node(LINE, $1, $3); }
      | '[' tLITINT ']'
-   //| lval '[' expr/rval ']'  { $$ = new cdk::address_node(LINE, $1, $3); }      fix this (address node)
+   //| lval '[' expr/rval ']'     { $$ = new cdk::address_node(LINE, $1, $3); }      fix this (address node)
      ;
+
+lit  : tLITINT                    { $$ = new cdk::integer_node(LINE, $1); }
+     | str                        { $$ = new cdk::string_node(LINE, $1); }
+     | tLITREAL                   { $$ = new cdk::double_node(LINE, $1); }
+     ;
+
 
 lval : tIDENTIFIER             { $$ = new cdk::identifier_node(LINE, $1); }
      ;
@@ -154,14 +179,21 @@ str  : tLITSTR				         { $$ = $1; }
      | str tLITSTR		         { $$ = new std::string(*$1 + *$2); }
      ; 
 
-ptr  : '[' type ']'            { $$ = new basic_type(4, basic_type::TYPE_POINTER);}
-     ;
-
 /*
 sweep : tSWEEP '+' '(' lvalue ':' expr ':' expr ':' expr ')' instr { $$ = 
                       new sweep_node(int lineno, true, $4, $6, $8, $10, cdk::basic_node *block); }
 */
 
+fargs : args			{ $$ = $1; }
+      |					  { $$ = nullptr;}
+		  ;
+
+arg : type tIDENTIFIER	          { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr); }
+    ;
+
+args  : arg                       { $$ = new cdk::sequence_node(LINE, $1); }
+      | args ',' arg              { $$ = new cdk::sequence_node(LINE, $3, $1); }
+      ;
 
 exprs  : expr                     { $$ = new cdk::sequence_node(LINE, $1); }
        | exprs ',' expr           { $$ = new cdk::sequence_node(LINE, $3, $1); }
