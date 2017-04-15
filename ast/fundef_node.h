@@ -16,7 +16,7 @@ namespace xpl {
   class fundef_node: public cdk::basic_node {
     bool _isProcedure, _isPublic, _isUsing;
     basic_type *_type;
-    std::string _name;
+    std::string *_name;
     cdk::sequence_node *_variables;
     cdk::expression_node *_literal;
     block_node *_body;
@@ -24,7 +24,7 @@ namespace xpl {
 
   public:
     inline fundef_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
-                              std::string name, cdk::sequence_node *variables, cdk::expression_node *literal, block_node *body) :
+                              std::string *name, cdk::sequence_node *variables, cdk::expression_node *literal, block_node *body) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables),
         _literal(literal), _body(body) {
     }
@@ -47,7 +47,7 @@ namespace xpl {
       return _type;
     }
 
-    inline std::string name() {
+    inline std::string *name() {
       return _name;
     }
 

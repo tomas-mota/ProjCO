@@ -14,13 +14,13 @@ namespace xpl {
   class fundeclaration_node: public cdk::basic_node {
     bool _isProcedure, _isPublic, _isUsing;
     basic_type *_type;
-    std::string _name;
+    std::string *_name;
     cdk::sequence_node *_variables;
 
 
   public:
     inline fundeclaration_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
-                              std::string name, cdk::sequence_node *variables) :
+                              std::string *name, cdk::sequence_node *variables) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables){
     }
 
@@ -42,7 +42,7 @@ namespace xpl {
       return _type;
     }
 
-    inline std::string name() {
+    inline std::string *name() {
       return _name;
     }
 

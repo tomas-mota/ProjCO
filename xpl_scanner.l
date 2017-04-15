@@ -32,6 +32,8 @@ double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 "real"                 return tREAL; 
 "string"               return tSTRING; 
 "xpl"                  return tMAIN;
+"!!"                   return tPRINTLN;
+"!"                    return tPRINT;
 
 "public"               return tPUBLIC;
 "use"                  return tUSE;
@@ -39,7 +41,7 @@ double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 "next"                 return tNEXT;
 "stop"                 return tSTOP;
 "return"               return tRETURN;
-"procedure"            return tPROCEDURE;
+"procedure"            return tPROC;
 "while"                return tWHILE; 
 "sweep"                return tSWEEP; 
 "if"                   return tIF; 
@@ -51,7 +53,6 @@ double                 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
 <X_STRING>\"           yy_pop_state(); return tLITSTR;
 <X_STRING>\\\"         *yylval.s += yytext + 1;
-<X_STRING>\"" "\"      ;
 <X_STRING>[\t\n\r]+    ;
 <X_STRING>.            *yylval.s += yytext;
 

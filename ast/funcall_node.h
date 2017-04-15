@@ -11,16 +11,16 @@ namespace xpl {
    * Class for describing function call  nodes.
    */
   class funcall_node: public cdk::expression_node {
-    std::string _name;
+    std::string *_name;
     cdk::sequence_node *_variables;
 
   public:
-    inline funcall_node(int lineno, std::string name, cdk::sequence_node *variables) :
+    inline funcall_node(int lineno, std::string *name, cdk::sequence_node *variables) :
         cdk::expression_node(lineno), _name(name), _variables(variables) {
     }
 
   public:
-    inline std::string name() {
+    inline std::string *name() {
       return _name;
     }
 
