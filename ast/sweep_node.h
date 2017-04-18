@@ -1,6 +1,6 @@
 // $Id: sweep_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
-#ifndef __CDK_SWEEPNODE_H__
-#define __CDK_SWEEPNODE_H__
+#ifndef __XPL_SWEEPNODE_H__
+#define __XPL_SWEEPNODE_H__
 
 #include <cdk/ast/expression_node.h>
 #include <cdk/ast/lvalue_node.h>

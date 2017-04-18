@@ -210,3 +210,7 @@ void xpl::type_checker::do_memallocation_node(xpl::memallocation_node * const no
 void xpl::type_checker::do_fundef_node(xpl::fundef_node * const node, int lvl) {
 
 }
+
+void xpl::type_checker::do_identity_node(xpl::identity_node * const node, int lvl) {
+
+}

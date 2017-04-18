@@ -29,7 +29,6 @@
 "string"               return tSTRING; 
 "xpl"                  return tMAIN;
 "!!"                   return tPRINTLN;
-"!"                    return tPRINT;
 
 "public"               return tPUBLIC;
 "use"                  return tUSE;

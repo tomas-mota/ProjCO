@@ -1,6 +1,6 @@
 // $Id: fundeclaration_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
-#ifndef __CDK_FUNDEFNODE_H__
-#define __CDK_FUNDEFNODE_H__
+#ifndef __XPL_FUNDEFNODE_H__
+#define __XPL_FUNDEFNODE_H__
 
 #include <cdk/ast/sequence_node.h>
 #include <cdk/ast/expression_node.h>

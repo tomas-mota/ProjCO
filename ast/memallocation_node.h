@@ -1,6 +1,6 @@
 // $Id: memallocation_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
-#ifndef __CDK_MEMALOCATIONNODE_H__
-#define __CDK_MEMALOCATIONNODE_H__
+#ifndef __XPL_MEMALOCATIONNODE_H__
+#define __XPL_MEMALOCATIONNODE_H__
 
 #include <cdk/ast/unary_expression_node.h>
 

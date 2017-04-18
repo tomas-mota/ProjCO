@@ -245,3 +245,5 @@ void xpl::postfix_writer::do_memallocation_node(xpl::memallocation_node * const 
 //---------------------------------------------------------------------------
 
 void xpl::postfix_writer::do_fundef_node(xpl::fundef_node * const node, int lvl){}
+
+void xpl::postfix_writer::do_identity_node(xpl::identity_node * const node, int lvl){}
