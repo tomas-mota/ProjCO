@@ -15,13 +15,13 @@ namespace xpl {
     bool _isProcedure, _isPublic, _isUsing;
     basic_type *_type;
     std::string *_name;
-    cdk::sequence_node *_variables;
+    cdk::sequence_node *_arguments;
 
 
   public:
     inline fundeclaration_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
-                              std::string *name, cdk::sequence_node *variables) :
-        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables){
+                              std::string *name, cdk::sequence_node *arguments) :
+        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _arguments(arguments){
     }
 
   public:
@@ -46,8 +46,8 @@ namespace xpl {
       return _name;
     }
 
-    inline cdk::sequence_node *variables() {
-      return _variables;
+    inline cdk::sequence_node *arguments() {
+      return _arguments;
     }
 
     void accept(basic_ast_visitor *sp, int level) {

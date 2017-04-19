@@ -17,15 +17,15 @@ namespace xpl {
     bool _isProcedure, _isPublic, _isUsing;
     basic_type *_type;
     std::string *_name;
-    cdk::sequence_node *_variables;
+    cdk::sequence_node *_arguments;
     cdk::expression_node *_literal;
     block_node *_body;
 
 
   public:
     inline fundef_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
-                              std::string *name, cdk::sequence_node *variables, cdk::expression_node *literal, block_node *body) :
-        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _variables(variables),
+                              std::string *name, cdk::sequence_node *arguments, cdk::expression_node *literal, block_node *body) :
+        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _arguments(arguments),
         _literal(literal), _body(body) {
     }
 
@@ -51,8 +51,8 @@ namespace xpl {
       return _name;
     }
 
-    inline cdk::sequence_node *variables() {
-      return _variables;
+    inline cdk::sequence_node *arguments() {
+      return _arguments;
     }
 
     inline cdk::expression_node *literal() {
