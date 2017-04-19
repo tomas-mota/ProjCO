@@ -3,18 +3,19 @@
 #define __XPL_INDEXATIONNODE_H__
 
 #include <cdk/ast/expression_node.h>
+#include <cdk/ast/lvalue_node.h>
 
 namespace xpl {
 
   /**
    * Class for describing if-then nodes.
    */
-  class indexation_node: public cdk::expression_node {
+  class indexation_node: public cdk::lvalue_node {
     cdk::expression_node *_ptr, *_index;
 
   public:
     inline indexation_node(int lineno, cdk::expression_node *ptr, cdk::expression_node *index) :
-        cdk::expression_node(lineno), _ptr(ptr), _index(index) {
+        cdk::lvalue_node(lineno), _ptr(ptr), _index(index) {
     }
 
   public:

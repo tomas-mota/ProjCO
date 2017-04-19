@@ -35,6 +35,18 @@ void xpl::xml_writer::do_neg_node(cdk::neg_node * const node, int lvl) {
   do_unary_expression(node, lvl);
 }
 
+void xpl::xml_writer::do_identity_node(xpl::identity_node * const node, int lvl) {
+  do_unary_expression(node, lvl);
+}
+
+void xpl::xml_writer::do_address_node(xpl::address_node * const node, int lvl) {
+  do_unary_expression(node, lvl);
+}
+
+void xpl::xml_writer::do_memallocation_node(xpl::memallocation_node * const node, int lvl) {
+  do_unary_expression(node, lvl);
+}
+
 //---------------------------------------------------------------------------
 
 inline void xpl::xml_writer::do_binary_expression(cdk::binary_expression_node * const node, int lvl) {
@@ -104,6 +116,19 @@ void xpl::xml_writer::do_assignment_node(cdk::assignment_node * const node, int 
   closeTag(node, lvl);
 }
 
+void xpl::xml_writer::do_indexation_node(xpl::indexation_node * const node, int lvl) {
+  openTag(node, lvl);
+  openTag("pointer", lvl + 2);
+  node->ptr()->accept(this, lvl + 4);
+  closeTag("pointer", lvl + 2);
+
+  openTag("index", lvl + 2);
+  node->index()->accept(this, lvl + 4);
+  closeTag("index", lvl + 2);
+  closeTag(node, lvl);
+}
+
+
 //---------------------------------------------------------------------------
 
 void xpl::xml_writer::do_evaluation_node(xpl::evaluation_node * const node, int lvl) {
@@ -162,6 +187,36 @@ void xpl::xml_writer::do_if_else_node(xpl::if_else_node * const node, int lvl) {
   closeTag(node, lvl);
 }
 
+void xpl::xml_writer::do_sweep_node(xpl::sweep_node * const node, int lvl) {
+    ASSERT_SAFE_EXPRESSIONS;
+  openTag(node, lvl);
+  
+  os() << std::string(lvl, ' ') << "<" \
+	     << " isIncremental='" << node->isIncremental() << "'" \
+	     << ">" << std::endl;
+
+  openTag("iterator", lvl + 2);
+  node->iter()->accept(this, lvl + 4);
+  closeTag("iterator", lvl + 2);
+
+  openTag("initValue", lvl + 2);
+  node->initValue()->accept(this, lvl + 4);
+  closeTag("initValue", lvl + 2);
+
+  openTag("limit", lvl + 2);
+  node->limit()->accept(this, lvl + 4);
+  closeTag("limit", lvl + 2);
+
+  openTag("increment", lvl + 2);
+  node->increment()->accept(this, lvl + 4);
+  closeTag("incremente", lvl + 2);
+
+  openTag("block", lvl + 2);
+  node->block()->accept(this, lvl + 4);
+  closeTag("block", lvl + 2);
+
+  closeTag(node, lvl);
+}
 //---------------------------------------------------------------------------
 
 void xpl::xml_writer::do_next_node(xpl::next_node * const node, int lvl) {}
@@ -174,9 +229,6 @@ void xpl::xml_writer::do_stop_node(xpl::stop_node * const node, int lvl) {}
 
 void xpl::xml_writer::do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl) {}
 
-void xpl::xml_writer::do_sweep_node(xpl::sweep_node * const node, int lvl) {}
-
-void xpl::xml_writer::do_address_node(xpl::address_node * const node, int lvl) {}
 
 //---------------------------------------------------------------------------
 
@@ -187,10 +239,7 @@ void xpl::xml_writer::do_funcall_node(xpl::funcall_node * const node, int lvl) {
 void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const node, int lvl) {}
 //---------------------------------------------------------------------------
 
-void xpl::xml_writer::do_indexation_node(xpl::indexation_node * const node, int lvl) {}
 
-void xpl::xml_writer::do_memallocation_node(xpl::memallocation_node * const node, int lvl) {}
 
 void xpl::xml_writer::do_fundef_node(xpl::fundef_node * const node, int lvl) {}
 
-void xpl::xml_writer::do_identity_node(xpl::identity_node * const node, int lvl) {}
