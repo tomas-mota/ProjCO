@@ -30,7 +30,7 @@
 %token <r> tLITREAL
 %token <i> tLITINT
 %nonassoc <s> tIDENTIFIER
-%token tWHILE tIF tPRINT tPRINTLN tREAD tEND tINT tREAL tMAIN tPUBLIC tUSE tNULL tNEXT tSTOP tRETURN tSWEEP tELSIF 
+%token tWHILE tIF tPRINT tPRINTLN tREAD tEND tINT tREAL tPUBLIC tUSE tNULL tNEXT tSTOP tRETURN tSWEEP tELSIF 
 %token tINTEGER tSTRING tREAL
 
 %nonassoc tSTRX
@@ -66,7 +66,7 @@
 %}
 %%
 
-program : decls               { compiler->ast(new cdk::sequence_node(LINE)); }
+program : decls               { compiler->ast($1); }
         |                     { compiler->ast(new cdk::nil_node(LINE)); }
         ;
 
@@ -86,18 +86,18 @@ limvar : type tIDENTIFIER '=' expr              { $$ = new xpl::vardeclaration_n
        ;
 
 fundec : tPROC tIDENTIFIER '(' ')'              { $$ = new xpl::fundeclaration_node
-                                                (LINE, true, false, false, new basic_type(4, basic_type::TYPE_UNSPEC), $2, nullptr); }
+                                                (LINE, true, false, false, nullptr, $2, nullptr); }
        | tPUBLIC tPROC tIDENTIFIER '(' ')'      { $$ = new xpl::fundeclaration_node
-                                                (LINE, true, true, false, new basic_type(4, basic_type::TYPE_UNSPEC), $3, nullptr); }
+                                                (LINE, true, true, false, nullptr, $3, nullptr); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' { $$ = new xpl::fundeclaration_node(LINE, false, true, false, $2, $3, $5); }
        | tUSE type tIDENTIFIER '(' fargs ')'    { $$ = new xpl::fundeclaration_node(LINE, false, false, true, $2, $3, $5); }
        | type tIDENTIFIER '(' fargs ')'         { $$ = new xpl::fundeclaration_node(LINE, false, false, false, $1, $2, $4); }
        ;
 
 fundef : tPROC tIDENTIFIER '(' ')' block                       { $$ = new xpl::fundef_node
-                                                               (LINE, true, false, false, new basic_type(4, basic_type::TYPE_UNSPEC), $2, nullptr, nullptr, $5); }
+                                                               (LINE, true, false, false, nullptr, $2, nullptr, nullptr, $5); }
        | tPUBLIC tPROC tIDENTIFIER '(' ')' block               { $$ = new xpl::fundef_node
-                                                               (LINE, true, true, false, new basic_type(4, basic_type::TYPE_UNSPEC), $3, nullptr, nullptr, $6); }
+                                                               (LINE, true, true, false, nullptr, $3, nullptr, nullptr, $6); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' '=' lit block  { $$ = new xpl::fundef_node(LINE, false, true, false, $2, $3, $5, $8, $9); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' block          { $$ = new xpl::fundef_node(LINE, false, true, false, $2, $3, $5, nullptr, $7); }
        | type tIDENTIFIER '(' fargs ')' '=' lit block          { $$ = new xpl::fundef_node(LINE, false, false, false, $1, $2, $4, $7, $8); }
@@ -140,7 +140,7 @@ cond : tIF '(' expr ')' inst %prec tIFX            { $$ = new xpl::if_node(LINE,
      ;
 
 
-elsif  : tELSIF '(' expr ')' inst                  { $$ = new xpl::if_node(LINE, $3, $5); }
+elsif  : tELSIF '(' expr ')' inst %prec tIFX       { $$ = new xpl::if_node(LINE, $3, $5); }
        | tELSIF '(' expr ')' inst tELSE inst       { $$ = new xpl::if_else_node(LINE, $3, $5, $7); }
        | tELSIF '(' expr ')' inst elsif            { $$ = new xpl::if_else_node(LINE, $3, $5, $6); }
        ;
@@ -209,12 +209,12 @@ insts  : inst                     { $$ = new cdk::sequence_node(LINE, $1); }
        | insts inst               { $$ = new cdk::sequence_node(LINE, $2, $1); }
        ;
 
-decls  : decl	                { $$ = new cdk::sequence_node(LINE, $1); }
+decls  : decl	                  { $$ = new cdk::sequence_node(LINE, $1); }
        | decls decl               { $$ = new cdk::sequence_node(LINE, $2, $1); }
        ;
 
-limvars : limvar	                { $$ = new cdk::sequence_node(LINE, $1); }
-        | limvars limvar               { $$ = new cdk::sequence_node(LINE, $2, $1); }
+limvars : limvar	          { $$ = new cdk::sequence_node(LINE, $1); }
+        | limvars limvar          { $$ = new cdk::sequence_node(LINE, $2, $1); }
         ;
 
 

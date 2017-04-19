@@ -24,10 +24,9 @@
 "<="                   return tLE; 
 "=="                   return tEQ; 
 "!="                   return tNE; 
-"int"                  return tINT; 
+"int"                  return tINT;
 "real"                 return tREAL; 
 "string"               return tSTRING; 
-"xpl"                  return tMAIN;
 "!!"                   return tPRINTLN;
 
 "public"               return tPUBLIC;
@@ -43,20 +42,14 @@
 "else"                 return tELSE; 
 "elsif"                return tELSIF; 
 
-[A-Za-z_][A-Za-z0-9_]* yylval.s = new std::string(yytext); return tIDENTIFIER;
+[A-Za-z_][A-Za-z0-9_]* {yylval.s = new std::string(yytext); return tIDENTIFIER;}
 
 \"                     yy_push_state(X_STRING); yylval.s = new std::string("");
 <X_STRING>\"           yy_pop_state(); return tLITSTR;
 <X_STRING>\\\"         *yylval.s += yytext + 1;
-<X_STRING>\\           yy_push_state(X_STR_SPECIAL);
-<X_STRING>.            *yylval.s += yytext;
+<X_STRING>.            *yylval.s += yytext;         /*special characters will be dealt with on postfix */
 
-<X_STR_SPECIAL>n                        {yy_pop_state(); *yylval.s += std::string(1,10); }
-<X_STR_SPECIAL>r                        {yy_pop_state(); *yylval.s += std::string(1,13); }
-<X_STR_SPECIAL>t                        {yy_pop_state(); *yylval.s += std::string(1,9); }
-<X_STR_SPECIAL>[\"\\]                   {yy_pop_state(); *yylval.s += std::string(1,(int)*yytext); }
-<X_STR_SPECIAL>[0-9a-fA-F][0-9a-fA-F]?	{yy_pop_state(); *yylval.s += std::string(1,strtol(yytext, nullptr, 16)); }
-<X_STR_SPECIAL>.|\n                     yyerror("Invalid special character");
+
 
 0x[A-Za-z0-9]+                          {yylval.i = strtol(yytext, nullptr, 16); return tLITINT;}
 [1-9][0-9]*                             {yylval.i = strtol(yytext, nullptr, 10); return tLITINT;}
@@ -67,7 +60,7 @@
 <X_COMMENT>"*/"        yy_pop_state();
 <X_COMMENT>.|\n        ;
 
-[-()<>=+*/%;{}.,?@\[\]|&]     return *yytext;
+[-()<>=+*/%;{}.,?@\[\]|&!]     return *yytext;
 
 [ \t\n\r]+             ; /* ignore whitespace */
 

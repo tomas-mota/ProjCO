@@ -108,6 +108,18 @@ void xpl::postfix_writer::do_eq_node(cdk::eq_node * const node, int lvl) {
   node->right()->accept(this, lvl);
   _pf.EQ();
 }
+void xpl::postfix_writer::do_and_node(cdk::and_node * const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+  node->left()->accept(this, lvl);
+  node->right()->accept(this, lvl);
+  _pf.EQ();
+}
+void xpl::postfix_writer::do_or_node(cdk::or_node * const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+  node->left()->accept(this, lvl);
+  node->right()->accept(this, lvl);
+  _pf.EQ();
+}
 
 //---------------------------------------------------------------------------
 

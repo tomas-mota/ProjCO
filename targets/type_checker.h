@@ -63,6 +63,8 @@ namespace xpl {
     void do_gt_node(cdk::gt_node * const node, int lvl);
     void do_ne_node(cdk::ne_node * const node, int lvl);
     void do_eq_node(cdk::eq_node * const node, int lvl);
+    void do_and_node(cdk::and_node * const node, int lvl);
+    void do_or_node(cdk::or_node * const node, int lvl);
 
   public:
     void do_identifier_node(cdk::identifier_node * const node, int lvl);
