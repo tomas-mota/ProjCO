@@ -18,6 +18,9 @@ void xpl::postfix_writer::do_integer_node(cdk::integer_node * const node, int lv
   _pf.INT(node->value()); // push an integer
 }
 
+void xpl::postfix_writer::do_double_node(cdk::double_node * const node, int lvl) {
+}
+
 void xpl::postfix_writer::do_string_node(cdk::string_node * const node, int lvl) {
   int lbl1;
 
@@ -40,6 +43,9 @@ void xpl::postfix_writer::do_neg_node(cdk::neg_node * const node, int lvl) {
   _pf.NEG(); // 2-complement
 }
 
+void xpl::postfix_writer::do_not_node(cdk::not_node * const node, int lvl) {
+
+}
 //---------------------------------------------------------------------------
 
 void xpl::postfix_writer::do_add_node(cdk::add_node * const node, int lvl) {

@@ -67,16 +67,12 @@ public:
 
 public:
   virtual void do_integer_node(cdk::integer_node * const node, int lvl) = 0;
-  virtual void do_double_node(cdk::double_node * const node, int lvl) {
-    // XPL does not use this node
-  }
+  virtual void do_double_node(cdk::double_node * const node, int lvl) = 0;
   virtual void do_string_node(cdk::string_node * const node, int lvl) = 0;
 
 public:
   virtual void do_neg_node(cdk::neg_node * const node, int lvl) = 0;
-  virtual void do_not_node(cdk::not_node * const node, int lvl) {
-    // not used
-  }
+  virtual void do_not_node(cdk::not_node * const node, int lvl) = 0;
 
 public:
   virtual void do_add_node(cdk::add_node * const node, int lvl) = 0;

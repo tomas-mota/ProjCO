@@ -25,7 +25,7 @@ namespace xpl {
   public:
     inline fundef_node(int lineno, bool isProcedure, bool isPublic, bool isUsing, basic_type *type,
                               std::string *name, cdk::sequence_node *arguments, cdk::expression_node *literal, block_node *body) :
-        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _arguments(arguments),
+        basic_node(lineno), _isProcedure(isProcedure), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _arguments(arguments),
         _literal(literal), _body(body) {
     }
 

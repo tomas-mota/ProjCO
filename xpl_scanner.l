@@ -54,21 +54,17 @@
 0x[A-Za-z0-9]+                          {yylval.i = strtol(yytext, nullptr, 16); return tLITINT;}
 [1-9][0-9]*                             {yylval.i = strtol(yytext, nullptr, 10); return tLITINT;}
 0                                       {yylval.i = strtol(yytext, nullptr, 10); return tLITINT;}
-[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?       {yylval.i = strtol(yytext, nullptr, 10); return tLITREAL;}
+[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?       {yylval.d = strtod(yytext, nullptr); return tLITREAL;}
 
 <X_COMMENT>"/*"        yy_push_state(X_COMMENT); 
 <X_COMMENT>"*/"        yy_pop_state();
 <X_COMMENT>.|\n        ;
 
-[-()<>=+*/%;{}.,?@\[\]|&!]     return *yytext;
+[-()<>=+*/%;{}.,?@\[\]|&!:]     return *yytext;
 
 [ \t\n\r]+             ; /* ignore whitespace */
 
 .                      yyerror("Unknown character");
-
-
-
-
 
 
 

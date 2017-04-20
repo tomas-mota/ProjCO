@@ -22,6 +22,10 @@ void xpl::xml_writer::do_string_node(cdk::string_node * const node, int lvl) {
   process_literal(node, lvl);
 }
 
+void xpl::xml_writer::do_double_node(cdk::double_node * const node, int lvl) {
+  process_literal(node, lvl);
+}
+
 //---------------------------------------------------------------------------
 
 inline void xpl::xml_writer::do_unary_expression(cdk::unary_expression_node * const node, int lvl) {
@@ -44,6 +48,9 @@ void xpl::xml_writer::do_address_node(xpl::address_node * const node, int lvl) {
 }
 
 void xpl::xml_writer::do_memallocation_node(xpl::memallocation_node * const node, int lvl) {
+  do_unary_expression(node, lvl);
+}
+void xpl::xml_writer::do_not_node(cdk::not_node * const node, int lvl) {
   do_unary_expression(node, lvl);
 }
 
@@ -96,6 +103,7 @@ void xpl::xml_writer::do_and_node(cdk::and_node * const node, int lvl) {
 void xpl::xml_writer::do_or_node(cdk::or_node * const node, int lvl) {
   do_binary_expression(node, lvl);
 }
+
 
 //---------------------------------------------------------------------------
 
@@ -281,6 +289,8 @@ void xpl::xml_writer::do_vardeclaration_node(xpl::vardeclaration_node * const no
   openTag("argument", lvl + 2);
   if(node->argument() != nullptr)
     node->argument()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
   closeTag("argument", lvl + 2);
 
   closeTag(node, lvl);
@@ -296,11 +306,15 @@ void xpl::xml_writer::do_block_node(xpl::block_node * const node, int lvl) {
   openTag("declarations", lvl + 2);
   if(node->declarations() != nullptr)
     node->declarations()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
   closeTag("declarations", lvl + 2);
 
   openTag("instructions", lvl + 2);
   if(node->instructions() != nullptr)
     node->instructions()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
   closeTag("instructions", lvl + 2);
 
   closeTag(node, lvl);
@@ -317,6 +331,8 @@ void xpl::xml_writer::do_funcall_node(xpl::funcall_node * const node, int lvl) {
   openTag("arguments", lvl + 2);
   if(node->arguments() != nullptr)
     node->arguments()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;
   closeTag("arguments", lvl + 2);    
 
   closeTag(node, lvl);    
@@ -341,6 +357,8 @@ void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const no
   os() << std::string(lvl + 2, ' ') << "<";
   if(node->type() != nullptr)
      os() << "type='" << node->type()->name() << "'";
+  else
+    os() << "type='" << "void" << "'";  
   os() << ">" << std::endl;
 
   os() << std::string(lvl + 2, ' ') << "<" \
@@ -350,6 +368,8 @@ void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const no
   openTag("arguments", lvl + 2);
   if(node->arguments() != nullptr)
     node->arguments()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
   closeTag("arguments", lvl + 2);
 
   closeTag(node, lvl);
@@ -374,6 +394,8 @@ void xpl::xml_writer::do_fundef_node(xpl::fundef_node * const node, int lvl) {
   os() << std::string(lvl + 2, ' ') << "<";
   if(node->type() != nullptr)
      os() << "type='" << node->type()->name() << "'";
+  else
+        os() << "type='" << "void" << "'";  
   os() << ">" << std::endl;
   
   os() << std::string(lvl + 2, ' ') << "<" \
@@ -383,11 +405,15 @@ void xpl::xml_writer::do_fundef_node(xpl::fundef_node * const node, int lvl) {
   openTag("arguments", lvl + 2);
   if(node->arguments() != nullptr)
     node->arguments()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
   closeTag("arguments", lvl + 2);
 
   openTag("literal", lvl + 2);
   if(node->literal() != nullptr)
     node->literal()->accept(this, lvl + 4);
+  else
+    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
   closeTag("literal", lvl + 2);
 
   openTag("body", lvl + 2);

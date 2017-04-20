@@ -46,9 +46,11 @@ namespace xpl {
   public:
     void do_integer_node(cdk::integer_node * const node, int lvl);
     void do_string_node(cdk::string_node * const node, int lvl);
+    void do_double_node(cdk::double_node * const node, int lvl);
 
   public:
     void do_neg_node(cdk::neg_node * const node, int lvl);
+    void do_not_node(cdk::not_node * const node, int lvl);
 
   public:
     void do_add_node(cdk::add_node * const node, int lvl);

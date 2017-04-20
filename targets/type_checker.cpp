@@ -13,6 +13,10 @@ void xpl::type_checker::do_integer_node(cdk::integer_node * const node, int lvl)
   node->type(new basic_type(4, basic_type::TYPE_INT));
 }
 
+void xpl::type_checker::do_double_node(cdk::double_node * const node, int lvl) {
+
+}
+
 void xpl::type_checker::do_string_node(cdk::string_node * const node, int lvl) {
   ASSERT_UNSPEC;
   node->type(new basic_type(4, basic_type::TYPE_STRING));
@@ -31,6 +35,10 @@ inline void xpl::type_checker::processUnaryExpression(cdk::unary_expression_node
 
 void xpl::type_checker::do_neg_node(cdk::neg_node * const node, int lvl) {
   processUnaryExpression(node, lvl);
+}
+
+void xpl::type_checker::do_not_node(cdk::not_node * const node, int lvl) {
+  
 }
 
 //---------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #define __XPL_MEMALOCATIONNODE_H__
 
 #include <cdk/ast/unary_expression_node.h>
+#include <cdk/ast/expression_node.h>
 
 namespace xpl {
 
@@ -12,7 +13,7 @@ namespace xpl {
   class memallocation_node: public cdk::unary_expression_node{
 
   public:
-    inline memallocation_node(int lineno, cdk::integer_node *size) :
+    inline memallocation_node(int lineno, cdk::expression_node *size) :
         cdk::unary_expression_node(lineno, size) {
     }
 

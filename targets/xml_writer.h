@@ -27,6 +27,20 @@ namespace xpl {
     }
 
   private:
+
+    std::string getType(int type){
+        switch(type){
+        case 1:
+          return "integer";        
+        case 2:
+          return "real";
+        case 16:
+          return "pointer";
+        case 8:
+          return "string";
+      }
+    }
+
     inline void openTag(const std::string &tag, int lvl) {
       os() << std::string(lvl, ' ') + "<" + tag + ">" << std::endl;
     }
@@ -52,12 +66,14 @@ namespace xpl {
   public:
     void do_integer_node(cdk::integer_node * const node, int lvl);
     void do_string_node(cdk::string_node * const node, int lvl);
+    void do_double_node(cdk::double_node * const node, int lvl);
 
   protected:
     void do_unary_expression(cdk::unary_expression_node * const node, int lvl);
 
   public:
     void do_neg_node(cdk::neg_node * const node, int lvl);
+    void do_not_node(cdk::not_node * const node, int lvl);
 
   protected:
     void do_binary_expression(cdk::binary_expression_node * const node, int lvl);
