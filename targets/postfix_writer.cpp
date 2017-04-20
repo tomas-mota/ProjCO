@@ -231,7 +231,11 @@ void xpl::postfix_writer::do_stop_node(xpl::stop_node * const node, int lvl){}
 
 //---------------------------------------------------------------------------
 
-void xpl::postfix_writer::do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl){}
+void xpl::postfix_writer::do_vardef_node(xpl::vardef_node * const node, int lvl){}
+
+//---------------------------------------------------------------------------
+
+void xpl::postfix_writer::do_vardec_node(xpl::vardec_node * const node, int lvl){}
 
 //---------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
-// $Id: vardeclaration_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
-#ifndef __XPL_VARDECLARATIONNODE_H__
-#define __XPL_VARDECLARATIONNODE_H__
+// $Id: vardef_node.h,v 1.1 2017/02/17 16:02:31 david Exp $ -*- c++ -*-
+#ifndef __XPL_VARDEFNODE_H__
+#define __XPL_VARDEFNODE_H__
 
 #include <cdk/ast/expression_node.h>
 #include <cdk/basic_type.h>
@@ -10,7 +10,7 @@ namespace xpl {
   /**
    * Class for describing variable declaration nodes.
    */
-  class vardeclaration_node: public cdk::basic_node {
+  class vardef_node: public cdk::basic_node {
     bool _isPublic, _isUsing;
     basic_type *_type;
     std::string *_name;
@@ -18,7 +18,7 @@ namespace xpl {
 
 
   public:
-    inline vardeclaration_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string *name, cdk::expression_node *argument) :
+    inline vardef_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string *name, cdk::expression_node *argument) :
         basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
     }
 
@@ -45,7 +45,7 @@ namespace xpl {
     }
 
     void accept(basic_ast_visitor *sp, int level) {
-      sp->do_vardeclaration_node(this, level);
+      sp->do_vardef_node(this, level);
     }
 
   };

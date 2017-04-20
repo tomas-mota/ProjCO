@@ -110,7 +110,8 @@ public:
   virtual void do_stop_node(xpl::stop_node * const node, int lvl) = 0;
 
 public:
-  virtual void do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl) = 0;
+  virtual void do_vardef_node(xpl::vardef_node * const node, int lvl) = 0;
+  virtual void do_vardec_node(xpl::vardec_node * const node, int lvl) = 0;
   virtual void do_sweep_node(xpl::sweep_node * const node, int lvl) = 0;
   virtual void do_address_node(xpl::address_node * const node, int lvl) = 0;
 

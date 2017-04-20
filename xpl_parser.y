@@ -75,14 +75,16 @@ decl : var ';'                { $$ = $1; }
      | fundec                 { $$ = $1; }
      ;
 
-var  : tPUBLIC type tIDENTIFIER '=' expr        { $$ = new xpl::vardeclaration_node(LINE, true, false, $2, $3, $5); }
-     | tUSE type tIDENTIFIER '=' expr           { $$ = new xpl::vardeclaration_node(LINE, false, true, $2, $3, $5); }
-     | type tIDENTIFIER '=' expr                { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, $4); }
-     | type tIDENTIFIER                         { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr); }
+var  : tPUBLIC type tIDENTIFIER '=' expr        { $$ = new xpl::vardef_node(LINE, true, false, $2, $3, $5); }
+     | tUSE type tIDENTIFIER '=' expr           { $$ = new xpl::vardef_node(LINE, false, true, $2, $3, $5); }
+     | type tIDENTIFIER '=' expr                { $$ = new xpl::vardef_node(LINE, false, false, $1, $2, $4); }
+     | tPUBLIC type tIDENTIFIER                 { $$ = new xpl::vardec_node(LINE, true, false, $2, $3); }
+     | tUSE type tIDENTIFIER                    { $$ = new xpl::vardec_node(LINE, false, true, $2, $3); }
+     | type tIDENTIFIER                         { $$ = new xpl::vardec_node(LINE, false, false, $1, $2); }
      ; 
 
-limvar : type tIDENTIFIER '=' expr ';'          { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, $4); }
-       | type tIDENTIFIER ';'                   { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr); }
+limvar : type tIDENTIFIER '=' expr ';'          { $$ = new xpl::vardef_node(LINE, false, false, $1, $2, $4); }
+       | type tIDENTIFIER ';'                   { $$ = new xpl::vardec_node(LINE, false, false, $1, $2); }
        ;
 
 fundec : tPROC tIDENTIFIER '(' args ')'         { $$ = new xpl::fundeclaration_node
@@ -101,7 +103,7 @@ fundef : tPROC tIDENTIFIER '(' args ')' block                  { $$ = new xpl::f
        | tPUBLIC type tIDENTIFIER '(' fargs ')' '=' lit block  { $$ = new xpl::fundef_node(LINE, false, true, false, $2, $3, $5, $8, $9); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' block          { $$ = new xpl::fundef_node(LINE, false, true, false, $2, $3, $5, nullptr, $7); }
        | type tIDENTIFIER '(' fargs ')' '=' lit block          { $$ = new xpl::fundef_node(LINE, false, false, false, $1, $2, $4, $7, $8); }
-       | type tIDENTIFIER '(' fargs ')' block              { $$ = new xpl::fundef_node(LINE, false, false, false, $1, $2, $4, nullptr, $6); }
+       | type tIDENTIFIER '(' fargs ')' block                  { $$ = new xpl::fundef_node(LINE, false, false, false, $1, $2, $4, nullptr, $6); }
        ; 
 
 type : tINT                                { $$ = new basic_type(4, basic_type::TYPE_INT); } 			
@@ -194,7 +196,7 @@ fargs : args                      { $$ = $1; }
       |                           { $$ = nullptr;}
       ;
 
-arg : type tIDENTIFIER	          { $$ = new xpl::vardeclaration_node(LINE, false, false, $1, $2, nullptr); }
+arg : type tIDENTIFIER	          { $$ = new xpl::vardec_node(LINE, false, false, $1, $2); }
     ;
 
 args   : arg                      { $$ = new cdk::sequence_node(LINE, $1); }

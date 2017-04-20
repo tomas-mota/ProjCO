@@ -266,7 +266,7 @@ void xpl::xml_writer::do_stop_node(xpl::stop_node * const node, int lvl) {
 
 //---------------------------------------------------------------------------
 
-void xpl::xml_writer::do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl) {
+void xpl::xml_writer::do_vardef_node(xpl::vardef_node * const node, int lvl) {
  
   openTag(node, lvl);
 
@@ -286,16 +286,41 @@ void xpl::xml_writer::do_vardeclaration_node(xpl::vardeclaration_node * const no
 	     << "name='" << *node->name() << "'" \
 	     << ">" << std::endl;
 
-  openTag("argument", lvl + 2);
-  if(node->argument() != nullptr)
+  if(node->argument() != nullptr){
+    openTag("argument", lvl + 2);
     node->argument()->accept(this, lvl + 4);
+    closeTag("argument", lvl + 2);
+  }  
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
-  closeTag("argument", lvl + 2);
+    os() << std::string(lvl + 2, ' ') << "<argument>null</argument>" << std::endl;
 
   closeTag(node, lvl);
 }
 
+//---------------------------------------------------------------------------
+
+void xpl::xml_writer::do_vardec_node(xpl::vardec_node * const node, int lvl) {
+ 
+  openTag(node, lvl);
+
+  os() << std::string(lvl + 2, ' ') << "<" \
+	     << "isPublic='" << std::boolalpha << node->isPublic() << "'" \
+	     << ">" << std::endl;
+
+  os() << std::string(lvl + 2, ' ') << "<" \
+      << "isUsing='" << std::boolalpha << node->isUsing() << "'" \
+      << ">" << std::endl;     
+
+  os() << std::string(lvl + 2, ' ') << "<" \
+	     << "type='" << node->type()->name() << "'" \
+	     << ">" << std::endl;
+
+  os() << std::string(lvl + 2, ' ') << "<" \
+	     << "name='" << *node->name() << "'" \
+	     << ">" << std::endl;
+
+  closeTag(node, lvl);
+}
 
 //---------------------------------------------------------------------------
 
@@ -307,14 +332,14 @@ void xpl::xml_writer::do_block_node(xpl::block_node * const node, int lvl) {
   if(node->declarations() != nullptr)
     node->declarations()->accept(this, lvl + 4);
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
+    os() << std::string(lvl + 4, ' ') << "none" << std::endl;  
   closeTag("declarations", lvl + 2);
 
   openTag("instructions", lvl + 2);
   if(node->instructions() != nullptr)
     node->instructions()->accept(this, lvl + 4);
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
+    os() << std::string(lvl + 4, ' ') << "none" << std::endl;  
   closeTag("instructions", lvl + 2);
 
   closeTag(node, lvl);
@@ -332,7 +357,7 @@ void xpl::xml_writer::do_funcall_node(xpl::funcall_node * const node, int lvl) {
   if(node->arguments() != nullptr)
     node->arguments()->accept(this, lvl + 4);
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;
+    os() << std::string(lvl + 4, ' ') << "none" << std::endl;
   closeTag("arguments", lvl + 2);    
 
   closeTag(node, lvl);    
@@ -369,7 +394,7 @@ void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const no
   if(node->arguments() != nullptr)
     node->arguments()->accept(this, lvl + 4);
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
+    os() << std::string(lvl + 4, ' ') << "none" << std::endl;  
   closeTag("arguments", lvl + 2);
 
   closeTag(node, lvl);
@@ -406,14 +431,14 @@ void xpl::xml_writer::do_fundef_node(xpl::fundef_node * const node, int lvl) {
   if(node->arguments() != nullptr)
     node->arguments()->accept(this, lvl + 4);
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
+    os() << std::string(lvl + 4, ' ') << "none" << std::endl;  
   closeTag("arguments", lvl + 2);
 
   openTag("literal", lvl + 2);
   if(node->literal() != nullptr)
     node->literal()->accept(this, lvl + 4);
   else
-    os() << std::string(lvl + 4, ' ') << "null" << std::endl;  
+    os() << std::string(lvl + 4, ' ') << "none" << std::endl;  
   closeTag("literal", lvl + 2);
 
   openTag("body", lvl + 2);

@@ -89,7 +89,8 @@ namespace xpl {
     void do_stop_node(xpl::stop_node * const node, int lvl);
 
   public:
-    void do_vardeclaration_node(xpl::vardeclaration_node * const node, int lvl);
+    void do_vardef_node(xpl::vardef_node * const node, int lvl);
+    void do_vardec_node(xpl::vardec_node * const node, int lvl);
     void do_sweep_node(xpl::sweep_node * const node, int lvl);
     void do_address_node(xpl::address_node * const node, int lvl);
 
