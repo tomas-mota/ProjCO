@@ -187,10 +187,6 @@ void xpl::type_checker::do_stop_node(xpl::stop_node * const node, int lvl) {
 }
 //---------------------------------------------------------------------------
 
-void xpl::type_checker::do_vardef_node(xpl::vardef_node * const node, int lvl) {
-
-}
-
 void xpl::type_checker::do_vardec_node(xpl::vardec_node * const node, int lvl) {
 
 }

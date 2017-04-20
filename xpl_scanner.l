@@ -66,8 +66,6 @@
 
 .                      yyerror("Unknown character");
 
-
-
 %%
 // Very, very dirty hack: flex is a mess generating C++ scanners.
 int xpl_scanner::yywrap() { return 1; }

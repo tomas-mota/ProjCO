@@ -14,11 +14,12 @@ namespace xpl {
     bool _isPublic, _isUsing;
     basic_type *_type;
     std::string *_name;
+    cdk::expression_node *_argument;
 
 
   public:
-    inline vardec_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string *name) :
-        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name) {
+    inline vardec_node(int lineno, bool isPublic, bool isUsing, basic_type *type, std::string *name, cdk::expression_node *argument) :
+        basic_node(lineno), _isPublic(isPublic), _isUsing(isUsing), _type(type), _name(name), _argument(argument) {
     }
 
   public:
@@ -37,6 +38,10 @@ namespace xpl {
 
     inline std::string *name() {
       return _name;
+    }
+
+    inline cdk::expression_node *argument() {
+      return _argument;
     }
 
     void accept(basic_ast_visitor *sp, int level) {

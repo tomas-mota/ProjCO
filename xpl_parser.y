@@ -51,7 +51,7 @@
 %nonassoc tUNARY '?' '@' '!' 
 %nonassoc '(' ')' '[' ']' 
 
-%type <node> program var decl inst var iter arg elsif cond iter limvar
+%type <node> program var decl inst var iter arg elsif cond iter limvar return
 %type <sequence> decls insts exprs args fargs limvars
 %type <expression> expr lit funcall
 %type <lvalue> lval
@@ -75,16 +75,15 @@ decl : var ';'                { $$ = $1; }
      | fundec                 { $$ = $1; }
      ;
 
-var  : tPUBLIC type tIDENTIFIER '=' expr        { $$ = new xpl::vardef_node(LINE, true, false, $2, $3, $5); }
-     | tUSE type tIDENTIFIER '=' expr           { $$ = new xpl::vardef_node(LINE, false, true, $2, $3, $5); }
-     | type tIDENTIFIER '=' expr                { $$ = new xpl::vardef_node(LINE, false, false, $1, $2, $4); }
-     | tPUBLIC type tIDENTIFIER                 { $$ = new xpl::vardec_node(LINE, true, false, $2, $3); }
-     | tUSE type tIDENTIFIER                    { $$ = new xpl::vardec_node(LINE, false, true, $2, $3); }
-     | type tIDENTIFIER                         { $$ = new xpl::vardec_node(LINE, false, false, $1, $2); }
+var  : tPUBLIC type tIDENTIFIER '=' expr        { $$ = new xpl::vardec_node(LINE, true, false, $2, $3, $5); }
+     | type tIDENTIFIER '=' expr                { $$ = new xpl::vardec_node(LINE, false, false, $1, $2, $4); }
+     | tPUBLIC type tIDENTIFIER                 { $$ = new xpl::vardec_node(LINE, true, false, $2, $3, nullptr); }
+     | tUSE type tIDENTIFIER                    { $$ = new xpl::vardec_node(LINE, false, true, $2, $3, nullptr); }
+     | type tIDENTIFIER                         { $$ = new xpl::vardec_node(LINE, false, false, $1, $2, nullptr); }
      ; 
 
-limvar : type tIDENTIFIER '=' expr ';'          { $$ = new xpl::vardef_node(LINE, false, false, $1, $2, $4); }
-       | type tIDENTIFIER ';'                   { $$ = new xpl::vardec_node(LINE, false, false, $1, $2); }
+limvar : type tIDENTIFIER '=' expr ';'          { $$ = new xpl::vardec_node(LINE, false, false, $1, $2, $4); }
+       | type tIDENTIFIER ';'                   { $$ = new xpl::vardec_node(LINE, false, false, $1, $2, nullptr); }
        ;
 
 fundec : tPROC tIDENTIFIER '(' args ')'         { $$ = new xpl::fundeclaration_node
@@ -112,18 +111,21 @@ type : tINT                                { $$ = new basic_type(4, basic_type::
      | '[' type ']'                        { $$ = new basic_type(4, basic_type::TYPE_POINTER); $$->_subtype = $2;}
      ;
 
-block : '{' limvars insts '}'              { $$ = new xpl::block_node(LINE, $2, $3); }
-      | '{' limvars '}'                    { $$ = new xpl::block_node(LINE, $2, nullptr); }
-      | '{' insts '}'                      { $$ = new xpl::block_node(LINE, nullptr, $2); }
-      | '{' '}'                            { $$ = new xpl::block_node(LINE, nullptr, nullptr); }
+block : '{' limvars insts return '}'       { $$ = new xpl::block_node(LINE, $2, new cdk::sequence_node(LINE, $4, $3)); }
+      | '{' limvars return '}'             { $$ = new xpl::block_node(LINE, $2, nullptr); }
+      | '{' insts return'}'                { $$ = new xpl::block_node(LINE, nullptr, new cdk::sequence_node(LINE, $3, $2)); }
+      | '{' return '}'                     { $$ = new xpl::block_node(LINE, nullptr, nullptr); }
       ;
+
+return : tRETURN                           { $$ = new xpl::return_node(LINE); }
+       |                                   { $$ = nullptr; }
+       ;
 
 inst : expr ';'                            { $$ = new xpl::evaluation_node(LINE, $1); }
      | expr '!'                            { $$ = new xpl::print_node(LINE, false, $1); }
      | expr tPRINTLN                       { $$ = new xpl::print_node(LINE, true, $1); }
      | tNEXT                               { $$ = new xpl::next_node(LINE); } 
      | tSTOP                               { $$ = new xpl::stop_node(LINE); } 
-     | tRETURN                             { $$ = new xpl::return_node(LINE); } 
      | cond                                { $$ = $1; }
      | iter                                { $$ = $1; }
      | block                               { $$ = $1; }
@@ -196,7 +198,7 @@ fargs : args                      { $$ = $1; }
       |                           { $$ = nullptr;}
       ;
 
-arg : type tIDENTIFIER	          { $$ = new xpl::vardec_node(LINE, false, false, $1, $2); }
+arg : type tIDENTIFIER	          { $$ = new xpl::vardec_node(LINE, false, false, $1, $2, nullptr); }
     ;
 
 args   : arg                      { $$ = new cdk::sequence_node(LINE, $1); }
