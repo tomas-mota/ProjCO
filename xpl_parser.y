@@ -86,18 +86,18 @@ limvar : type tIDENTIFIER '=' expr ';'          { $$ = new xpl::vardec_node(LINE
        | type tIDENTIFIER ';'                   { $$ = new xpl::vardec_node(LINE, false, false, $1, $2, nullptr); }
        ;
 
-fundec : tPROC tIDENTIFIER '(' args ')'         { $$ = new xpl::fundeclaration_node
+fundec : tPROC tIDENTIFIER '(' fargs ')'         { $$ = new xpl::fundeclaration_node
                                                 (LINE, true, false, false, nullptr, $2, $4); }
-       | tPUBLIC tPROC tIDENTIFIER '(' args ')' { $$ = new xpl::fundeclaration_node
+       | tPUBLIC tPROC tIDENTIFIER '(' fargs ')' { $$ = new xpl::fundeclaration_node
                                                 (LINE, true, true, false, nullptr, $3, $5); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' { $$ = new xpl::fundeclaration_node(LINE, false, true, false, $2, $3, $5); }
        | tUSE type tIDENTIFIER '(' fargs ')'    { $$ = new xpl::fundeclaration_node(LINE, false, false, true, $2, $3, $5); }
        | type tIDENTIFIER '(' fargs ')'         { $$ = new xpl::fundeclaration_node(LINE, false, false, false, $1, $2, $4); }
        ;
 
-fundef : tPROC tIDENTIFIER '(' args ')' block                  { $$ = new xpl::fundef_node
+fundef : tPROC tIDENTIFIER '(' fargs ')' block                  { $$ = new xpl::fundef_node
                                                                (LINE, true, false, false, nullptr, $2, $4, nullptr, $6); }
-       | tPUBLIC tPROC tIDENTIFIER '(' args ')' block          { $$ = new xpl::fundef_node
+       | tPUBLIC tPROC tIDENTIFIER '(' fargs ')' block          { $$ = new xpl::fundef_node
                                                                (LINE, true, true, false, nullptr, $3, $5, nullptr, $7); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' '=' lit block  { $$ = new xpl::fundef_node(LINE, false, true, false, $2, $3, $5, $8, $9); }
        | tPUBLIC type tIDENTIFIER '(' fargs ')' block          { $$ = new xpl::fundef_node(LINE, false, true, false, $2, $3, $5, nullptr, $7); }
@@ -191,7 +191,7 @@ lval : tIDENTIFIER                { $$ = new cdk::identifier_node(LINE, $1); }
      ;
 
 str  : tLITSTR                    { $$ = $1; }
-     | str tLITSTR                { $$ = new std::string(*$1 + *$2); }
+     | str tLITSTR                { $$ = new std::string(*$1 + *$2); delete $1; delete $2;}
      ; 
 
 fargs : args                      { $$ = $1; }

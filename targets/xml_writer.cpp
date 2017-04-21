@@ -279,9 +279,7 @@ void xpl::xml_writer::do_vardec_node(xpl::vardec_node * const node, int lvl) {
       << "isUsing='" << std::boolalpha << node->isUsing() << "'" \
       << ">" << std::endl;     
 
-  os() << std::string(lvl + 2, ' ') << "<" \
-	     << "type='" << getType(node->type()->name()) << "'" \
-	     << ">" << std::endl;
+  printType(node->type(), lvl);
 
   os() << std::string(lvl + 2, ' ') << "<" \
 	     << "name='" << *node->name() << "'" \
@@ -358,12 +356,10 @@ void xpl::xml_writer::do_fundeclaration_node(xpl::fundeclaration_node * const no
 	     << "isUsing='" << std::boolalpha << node->isUsing() << "'" \
 	     << ">" << std::endl;
 
-  os() << std::string(lvl + 2, ' ') << "<";
   if(node->type() != nullptr)
-     os() << "type='" << getType(node->type()->name()) << "'";
+    printType(node->type(), lvl);
   else
-    os() << "type='" << "void" << "'";  
-  os() << ">" << std::endl;
+    os() << std::string(lvl + 2, ' ') << "<type='void'>" << std::endl;  
 
   os() << std::string(lvl + 2, ' ') << "<" \
 	     << "name='" << *node->name() << "'" \
@@ -396,13 +392,12 @@ void xpl::xml_writer::do_fundef_node(xpl::fundef_node * const node, int lvl) {
 	     << "isUsing='" << std::boolalpha << node->isUsing() << "'" \
 	     << ">" << std::endl;
 
-  os() << std::string(lvl + 2, ' ') << "<";
   if(node->type() != nullptr)
-     os() << "type='" << getType(node->type()->name()) << "'";
+    printType(node->type(), lvl);
   else
-        os() << "type='" << "void" << "'";  
-  os() << ">" << std::endl;
-  
+    os() << std::string(lvl + 2, ' ') << "<type='void'>" << std::endl; 
+
+
   os() << std::string(lvl + 2, ' ') << "<" \
 	     << "name='" << *node->name() << "'" \
 	     << ">" << std::endl;

@@ -28,6 +28,18 @@ namespace xpl {
 
   private:
 
+    void printType(basic_type *typeNode, int lvl){
+      std::string tp = getType(typeNode->name());
+
+      os() << std::string(lvl + 2, ' ') \
+	     << "<type>" << tp << "</type>" << std::endl;
+
+      if(typeNode->subtype() != nullptr){
+        printType(typeNode->subtype(), lvl + 2);       
+      }
+    }
+
+
     std::string getType(int type){
         switch(type){
         case 1:

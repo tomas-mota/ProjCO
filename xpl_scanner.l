@@ -57,7 +57,7 @@
 <X_STR_SPECIAL>[0-9a-fA-F][0-9a-fA-F]?	{yy_pop_state(); *yylval.s += std::string(1,strtol(yytext, nullptr, 16)); }
 <X_STR_SPECIAL>.|\n			            yyerror("Invalid special character");
 
-0x[A-Za-z0-9]+                          {yylval.i = strtol(yytext, nullptr, 16); return tLITINT;}
+0[xX][A-Za-z0-9]+                          {yylval.i = strtol(yytext, nullptr, 16); return tLITINT;}
 [1-9][0-9]*                             {yylval.i = strtol(yytext, nullptr, 10); return tLITINT;}
 0                                       {yylval.i = strtol(yytext, nullptr, 10); return tLITINT;}
 [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?       {yylval.d = strtod(yytext, nullptr); return tLITREAL;}
